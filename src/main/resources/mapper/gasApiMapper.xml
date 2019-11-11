@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wis.mapper.GasApiMapper">
+
+    <resultMap id="SceneResultMap" type="com.wis.pojo.po.Scene">
+        <id column="id" property="id"/>
+        <result column="sceneid" property="sceneId"/>
+        <result column="cname" property="sceneName"/>
+        <result column="addtime" property="addTime"/>
+        <result column="scada_sid" property="scadaSid"/>
+        <result column="uptime" property="upTime"/>
+        <result column="s_name" property="scadaName"/>
+        <result column="s_val" property="sceneStatus"/>
+    </resultMap>
+
+    <resultMap id="ItemDataResultMap" type="com.wis.pojo.po.ItemData">
+        <id column="id" property="id"/>
+        <result column="s_id" property="scadaSid"/>
+        <result column="item_id" property="itemId"/>
+        <result column="pid" property="pid"/>
+        <result column="pname" property="pname"/>
+        <result column="pvalue" property="pvalue"/>
+        <result column="pstatus" property="pstatus"/>
+        <result column="unit" property="unit"/>
+        <result column="warning" property="warning"/>
+    </resultMap>
+
+</mapper>

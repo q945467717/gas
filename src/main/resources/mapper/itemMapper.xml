@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wis.mapper.ItemMapper">
+
+    <select id="getTotal" resultType="java.lang.Integer">
+        SELECT count(1) FROM wis_item WHERE 1 = 1
+        <if test="cname!=null and cname !=''">
+            AND cname LIKE CONCAT('%',#{cname},'%')
+        </if>
+        <if test="uid!=null and uid !=''">
+            AND uid like CONCAT('%',#{uid},'%')
+        </if>
+        <if test="wtlx!=0">
+            and wtlx=#{wtlx}
+        </if>
+        <if test="sid!=null and sid !=''">
+            and sid=#{sid}
+        </if>
+    </select>
+
+
+    <select id="getItemListPage" resultType="com.wis.pojo.po.Item">
+        SELECT * FROM wis_item WHERE 1 = 1
+        <if test="cname!=null and cname !=''">
+            AND cname LIKE CONCAT('%',#{cname},'%')
+        </if>
+        <if test="uid!=null and uid !=''">
+            AND uid like CONCAT('%',#{uid},'%')
+        </if>
+        <if test="wtlx!=0">
+            and wtlx = #{wtlx}
+        </if>
+        <if test="sid!=null and sid !=''">
+            and sid=#{sid}
+        </if>
+        LIMIT #{offset},#{limit}
+    </select>
+
+</mapper>

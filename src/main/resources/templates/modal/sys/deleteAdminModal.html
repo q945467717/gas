@@ -1,0 +1,43 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<div class="modal-dialog" style="width: 300px">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">删除管理员</h4>
+        </div>
+        <div class="modal-body">确定要删除该管理员吗？</div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button th:id="${id}" type="button" class="btn btn-primary" onclick="deleteAdmin(this.id)" >确定</button>
+        </div>
+    </div>
+</div>
+</html>
+
+<script>
+    function deleteAdmin(id) {
+            $.ajax({
+                // contentType: 'application/json;charset=UTF-8',
+                url: "/sys/deleteAdmin",
+                data: {'userId': id},
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if(data.code===0){
+                        swal({
+                            title: data.msg,
+                            type: "error"
+                        })
+                    }else {
+                        swal({
+                            title: data.data,
+                            type: "success"
+                        },function(){
+                            $('#deleteAdminModal').modal('hide');
+                            window.location.reload();
+                        });
+                    }
+                }
+            });
+    }
+</script>

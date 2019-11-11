@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!--引入统一头-->
+<head th:include="import/head :: head"><title>后台管理</title></head>
+
+<body class="fixed-sidebar full-height-layout" style="min-width: 1550px;overflow: visible">
+<div id="wrapper">
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header" style="background: green;text-align: center;height: 103px">
+                    <div class="dropdown profile-element" sec:authorize="isAuthenticated()">
+                        <span class="clear" >
+                                <strong class="font-bold" >您好！<span sec:authentication="name"></span></strong>
+                        </span>
+                    </div>
+                    <div class="logo-element" style="height: 103px;padding: 40px 20px">3D</div>
+                </li>
+
+<!--                <li>-->
+<!--                    <a title="导入场景" data-toggle="collapse" data-parent="#selector" href="#collapseOne">-->
+<!--                        <span class="nav-label">导入场景</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li id="collapseOne" class="panel-collapse collapse in">-->
+<!--                    <a th:href="@{/importScene}" target="_blank" title="导入场景">-->
+<!--                        <i class="fa fa-users"></i>-->
+<!--                        <span class="nav-label">导入场景</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+
+<!--                <li>-->
+<!--                    <a title="管理员管理" data-toggle="collapse" data-parent="#selector" href="#collapseTwo">-->
+<!--                        <span class="nav-label">管理员管理</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li id="collapseTwo" class="panel-collapse collapse in">-->
+<!--                    <a class="J_menuItem" th:href="@{/sys/peopleManage}" title="管理员管理">-->
+<!--                        <i class="fa fa-users"></i>-->
+<!--                        <span class="nav-label">管理员管理</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+
+<!--                <li>-->
+<!--                    <a title="场景管理" data-toggle="collapse" data-parent="#selector" href="#collapseThree">-->
+<!--                        <span class="nav-label">场景管理</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li id="collapseThree" class="panel-collapse collapse in">-->
+<!--                    <a class="J_menuItem" th:href="@{/scene/sceneManage}" title="场景管理">-->
+<!--                        <i class="fa fa-users"></i>-->
+<!--                        <span class="nav-label">场景管理</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+
+<!--                <li>-->
+<!--                    <a title="物体管理" data-toggle="collapse" data-parent="#selector" href="#collapseFour">-->
+<!--                        <span class="nav-label">物体管理</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li id="collapseFour" class="panel-collapse collapse in">-->
+<!--                    <a  class="J_menuItem" th:href="@{/item/itemManage}" title="物体管理">-->
+<!--                        <i class="fa fa-users"></i>-->
+<!--                        <span class="nav-label">物体管理</span>-->
+<!--                    </a>-->
+<!--                    <a  class="J_menuItem" th:href="@{/item/importItem}" title="批量导入物体">-->
+<!--                        <i class="fa fa-users"></i>-->
+<!--                        <span class="nav-label">批量导入物体</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+
+
+                <li>
+                    <a th:href="@{/importScene}" target="_blank" title="导入场景">
+                        <i class="fa fa-users"></i>
+<!--                        <span class="glyphicon glyphicon-chevron-right"></span>-->
+                        <span class="nav-label">导入场景</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="J_menuItem" th:href="@{/sys/peopleManage}" title="管理员管理">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">管理员管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="J_menuItem" th:href="@{/scene/sceneManage}" title="场景管理">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">场景管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a  class="J_menuItem" th:href="@{/item/itemManage}" title="物体管理">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">物体管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a  class="J_menuItem" th:href="@{/item/importItem}" title="批量导入物体">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">批量导入物体</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--左侧导航结束-->
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1" style="overflow: hidden">
+        <div class="row border-bottom ">
+            <nav class="navbar navbar-static-top rowbj" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a id="miniLink" class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#">
+                        <i class="fa fa-bars"></i></a>
+                    <div class="navbar-form-custom">
+                        <div class="form-group">
+                            <h1>3D可视化场景管理后台</h1>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!--选项卡TAB-->
+        <div class="row content-tabs">
+            <nav class="page-tabs J_menuTabs" id="tabNav">
+                <div class="page-tabs-content" >
+                    <a href="javascript:" class="active J_menuTab" data-id="hello">首页</a>
+                </div>
+            </nav>
+            <div class="btn-group roll-nav roll-right" style="right: 0;width: 220px;padding: 0">
+                <button class="dropdown J_tabClose" data-toggle="dropdown" style="padding: 0;right: 60px">选项卡操作</button>
+                <ul role="menu" class="dropdown-menu dropdown-menu-right" style="right: 60px">
+                    <li><a>刷新当前选项卡</a></li>
+                    <li class="J_tabCloseAll"><a>关闭全部</a></li>
+                    <li class="J_tabCloseOther"><a>关闭其他</a></li>
+                </ul>
+                <a id="changePasswordButton" type="button" class="roll-nav roll-right J_tabExit" data-toggle="modal"
+                   data-target="#editPasswordModal"
+                   onclick="openModal('/admin/toChangePassword','editPasswordModal')" style="right: 60px">
+                    修改密码
+                </a>
+                <a th:href="@{/logout}" class="roll-nav roll-right J_tabExit">
+                    <i class="fa fa fa-sign-out"></i> 退出
+                </a>
+            </div>
+        </div>
+        <!--用来切换的iframe-->
+        <div class="row J_mainContent" id="content-main">
+            <iframe class="J_iframe" id="iframe0" name="iframe0" width="100%" height="100%" th:src="@{/admin/hello}"
+                    frameborder="0"
+                    data-id="hello">
+            </iframe>
+        </div>
+        <div class="footer">
+            <div class="pull-right"></div>
+        </div>
+    </div>
+    <!--右侧部分结束-->
+</div>
+<div class="modal inmodal fade" id="editPasswordModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<script>
+    $(function () {
+        console.log("hello");
+        $(".panel-collapse .collapse .in").collapse('hide')
+    })
+</script>
+<!--引入统一JS-->
+<script th:replace="import/script :: script"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<div class="modal-dialog" style="width: 300px">
+    <div class="modal-content" style="width: 280px">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">新增管理员</h4>
+        </div>
+        <div class="modal-body" style="width: 250px">
+            <div style="width: 200px">请输入用户名:<input type="text" id="username" /></div>
+            <div style="width: 200px">请输入密码:  <input type="password" id="password" /></div>
+            <div style="width: 200px">请输入联系电话：<input type="text" id="telephone" /></div>
+            <div style="width: 200px">请输入管理员姓名：<input type="text" id="adminName" /></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="addAdmin()" >确定</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function addAdmin() {
+
+        if($("#username").val()===''){
+            swal({
+                title: "请输入用户名",
+                type: "warning"
+            });
+            return;
+        }
+        if($("#password").val()===''){
+            swal({
+                title: "请输入密码",
+                type: "warning"
+            });
+            return;
+        }
+        if($("#adminName").val()===''){
+            swal({
+                title: "请输入姓名",
+                type: "warning"
+            });
+            return;
+        }
+        if($("#telephone").val()===''){
+            swal({
+                title: "请输入联系电话",
+                type: "warning"
+            });
+            return;
+        }
+
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var adminName = $("#adminName").val();
+        var telephone = $("#telephone").val();
+
+        $.ajax({
+            // contentType: 'application/json;charset=UTF-8',
+            url:"/sys/addAdmin",
+            data:{'username':username,"password":password,"adminName":adminName,"telephone":telephone},
+            type:"POST",
+            dataType:"json",
+            success:function (data) {
+
+                if(data.code===0){
+                    swal({
+                        title: data.msg,
+                        type: "error"
+                    });
+                }else {
+                    swal({
+                        title: data.data,
+                        type: "success"
+                    },function(){
+                        $('#addAdminModal').modal('hide');
+                        window.location.reload();
+                    });
+                }
+            }
+        })
+
+    }
+</script>
