@@ -168,10 +168,4 @@ public class GasController {
         return ResultUtil.success(response.getStatus(),"成功");
     }
 
-    @RequestMapping("/lookAtItem")
-    public Result lookAtItem(String uid,HttpServletResponse response){
-
-        return ResultUtil.success(response.getStatus(),uid);
-    }
-
 }
