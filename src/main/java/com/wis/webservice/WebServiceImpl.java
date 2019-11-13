@@ -1,6 +1,7 @@
 package com.wis.webservice;
 
 
+import com.wis.pojo.po.User;
 import org.springframework.stereotype.Component;
 
 @Component("helloImpl")
@@ -12,11 +13,16 @@ public class WebServiceImpl implements WebService{
 
 
     @Override
-    public String seyHello(String name) {
+    public User seyHello(String name) {
 
         System.out.println("=================>"+name);
 
-        return "hello:"+ name;
+        User user = new User();
+        user.setCname(name);
+        user.setLxdh("15023750519");
+
+
+        return user;
 
     }
 

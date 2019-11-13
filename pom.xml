@@ -5,13 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.0.RELEASE</version>
+        <version>2.1.8.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.wis</groupId>
     <artifactId>gas</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gas</name>
     <packaging>war</packaging>
     <description>gas project for Spring Boot</description>
 
@@ -133,10 +132,10 @@
             <version>1.2.62</version>
         </dependency>
 
-
     </dependencies>
 
     <build>
+        <finalName>gas</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

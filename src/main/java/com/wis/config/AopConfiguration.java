@@ -3,7 +3,6 @@ package com.wis.config;
 
 import com.wis.utils.HttpContextUtils;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -13,7 +12,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Aspect
 @Component
@@ -27,8 +25,10 @@ public class AopConfiguration {
 
     @Pointcut("execution(public * com.wis.controller.GasController.*(..))")
     public void apiLog(){}
+    @Pointcut("execution(public * com.wis.mapper.ItemMapper.getItemListPage(..))")
+    public void findItemLig(){}
 
-    @Before("apiLog()")
+    //@Before("apiLog()")
     public void beforeLog(JoinPoint joinPoint) throws RuntimeException{
         startTime.set(System.currentTimeMillis());
 
@@ -43,6 +43,13 @@ public class AopConfiguration {
         logger.info("IP : " + request.getRemoteAddr());
         logger.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         logger.info("ip:"+ipAddress);
+    }
+
+    @Before("findItemLig()")
+    public void itemBeforeLog(JoinPoint joinPoint) throws RuntimeException{
+
+        logger.info("查询物体");
+
     }
 
 }

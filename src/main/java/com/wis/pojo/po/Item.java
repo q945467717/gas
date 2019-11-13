@@ -2,9 +2,10 @@ package com.wis.pojo.po;
 
 import com.wis.pojo.vo.Page;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Item extends Page{
+public class Item extends Page implements Serializable {
 
     private int id;
     private String sid;

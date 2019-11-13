@@ -6,6 +6,8 @@ import com.wis.pojo.po.ItemData;
 import com.wis.pojo.po.Scene;
 import com.wis.pojo.vo.ItemInfo;
 import com.wis.service.GasApiService;
+import com.wis.utils.WebServiceUtil;
+import org.apache.cxf.endpoint.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,7 @@ public class GasApiServiceImpl implements GasApiService {
         List<Item> itemList = gasApiMapper.findItemBySid(sceneId);
 
         List<Map> mapList = new ArrayList<>();
+
 
         for(Item item:itemList){
 
@@ -193,7 +196,7 @@ public class GasApiServiceImpl implements GasApiService {
 
 //        try {
 //            Client client = WebServiceUtil.createWebServiceClient();
-//            Object[] objects = client.invoke();
+//            Object[] objects = client.invoke("");
 //
 //            System.out.println(objects[0].toString());
 //        }catch (Exception e){

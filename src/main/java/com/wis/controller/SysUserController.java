@@ -84,7 +84,7 @@ public class SysUserController {
     }
 
     //管理员数据接口
-    @RequestMapping("peopleInfoList")
+    @RequestMapping("/peopleInfoList")
     @ResponseBody
     public List<AdminInfo> peopleInfoList(){
 

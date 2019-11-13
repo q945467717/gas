@@ -1,18 +1,23 @@
 package com.wis.gas;
 
 import com.alibaba.fastjson.JSON;
+import com.wis.pojo.po.User;
 import com.wis.utils.WebServiceUtil;
 import com.wis.webservice.WebService;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest
-class GasApplicationTests {
+public class GasApplicationTests {
+
 
     @Test
-    void contextLoads(){
+    public void contextLoads(){
 
         try {
             Client client = WebServiceUtil.createWebServiceClient("http://www.webxml.com.cn/WebServices/TrainTimeWebService.asmx?wsdl");
@@ -24,7 +29,7 @@ class GasApplicationTests {
     }
 
     @Test
-    void test() {
+    public void test() {
 
 
         try {
@@ -42,7 +47,7 @@ class GasApplicationTests {
             // 数据准备
             String userId = "945467717";
             // 调用代理接口的方法调用并返回结果
-            String result = us.seyHello(userId);
+            User result = us.seyHello(userId);
 
             System.out.println("返回结果:" + result);
         } catch (Exception e) {
@@ -51,15 +56,16 @@ class GasApplicationTests {
 
     }
 
+
     @Test
-    void test2() {
+    public void test2() {
 
         try {
 
-            Client client = WebServiceUtil.createWebServiceClient("http://localhost:8080/cxf/hello?wsdl");
-            Object[] objects = client.invoke("seyHello","zhang");
+            Client client = WebServiceUtil.createWebServiceClient("http://www.webxml.com.cn/WebServices/ChinaZipSearchWebService.asmx?wsdl");
+            Object[] objects = client.invoke("getAddressByZipCode","730900");
 
-            Object json = JSON.toJSON(objects[0]);
+            String json = JSON.toJSONString(objects);
 
             System.out.println(json);
 

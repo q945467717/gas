@@ -5,6 +5,7 @@ import com.wis.service.GasApiService;
 import com.wis.utils.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class GasController {
      * @param sceneId 场景ID
      * @return 场景所有物体
      */
-    @RequestMapping("/getItemTable")
+    @PostMapping("/getItemTable")
     public Result getItemTable(HttpServletResponse response,String sceneId){
 
         try {
@@ -43,7 +44,7 @@ public class GasController {
      * @param sceneId 场景ID
      * @return 会产生告警的设备信息
      */
-    @RequestMapping("/getItemYSBH")
+    @PostMapping("/getItemYSBH")
     public Result getItemYSBH(HttpServletResponse response,String sceneId){
 
         try {
@@ -62,7 +63,7 @@ public class GasController {
      * @param sceneId 场景SID
      * @return 提示信息
      */
-    @RequestMapping("/getPinfo")
+    @PostMapping("/getPinfo")
     public Result getPinfo(HttpServletResponse response,String sceneId){
 
         try {
@@ -81,7 +82,7 @@ public class GasController {
      * @param sceneId 场景SID
      * @return 提示信息
      */
-    @RequestMapping("/mnsj_func")
+    @PostMapping("/mnsj_func")
     public Result mnsj_func(HttpServletResponse response,String sceneId){
 
         try {
@@ -101,7 +102,7 @@ public class GasController {
      * @param uid 物体UID
      * @return 提示信息
      */
-    @RequestMapping("/getCameraInfo")
+    @PostMapping("/getCameraInfo")
     public Result getCameraInfo(HttpServletResponse response, String sceneId, String uid){
 
         try {
@@ -115,7 +116,7 @@ public class GasController {
 
     }
 
-    @RequestMapping("/getEquipmentInfo")
+    @PostMapping("/getEquipmentInfo")
     public Result getEquipmentInfo(HttpServletResponse response, String sceneId){
 
         try {
@@ -136,7 +137,7 @@ public class GasController {
      * @param uid 物体UID
      * @return 提示信息
      */
-    @RequestMapping("/getMsgInfo")
+    @PostMapping("/getMsgInfo")
     public Result getMsgInfo(HttpServletResponse response,String sceneId,String uid){
 
         try {
@@ -155,7 +156,7 @@ public class GasController {
      * @param sceneId 场景SID
      * @return 提示信息
      */
-    @RequestMapping("/autoTask")
+    @PostMapping("/autoTask")
     public Result autoTask(HttpServletResponse response,String sceneId){
 
         try {

@@ -1,6 +1,8 @@
 package com.wis.webservice;
 
 
+import com.wis.pojo.po.User;
+
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -9,6 +11,7 @@ import javax.jws.WebResult;
 public interface WebService {
 
     @WebMethod
-    public @WebResult String seyHello(@WebParam(name = "userName") String name);
+    @WebResult
+    User seyHello(@WebParam(name = "userName") String name);
 
 }

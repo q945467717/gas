@@ -39,18 +39,6 @@ public class MainController {
         return "redirect:toLogin";
     }
 
-    @RequestMapping("/importScene")
-    public String importScene(HttpServletRequest request,HttpServletResponse response){
-
-        HttpSession session = request.getSession();
-        String  jsessionid = (String)session.getAttribute("JSESSIONID");
-
-        System.out.println(jsessionid);
-        response.setHeader("Set-Cookie","JSESSIONID="+jsessionid);
-
-        return "redirect:http://localhost:8081/home";
-    }
-
     @RequestMapping("/toLogin")
     public String toLogin(){
         return "login";
