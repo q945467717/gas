@@ -1,0 +1,75 @@
+<div class="modal-dialog" style="width: 300px">
+    <div class="modal-content" style="width: 400px">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">新增场景</h4>
+        </div>
+        <div class="modal-body" style="width: 250px">
+            <div style="width: 200px">请输入场景ID:<input type="text" id="sceneId" /></div>
+            <div style="width: 200px">请输入场景名称  <input type="text" id="sceneName" /></div>
+            <div style="width: 200px">请输入对接平台ID：<input type="text" id="scadaId" /></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="addScene()" >确定</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function addScene() {
+
+        if($("#sceneId").val()===''){
+            swal({
+                title: "请输入场景ID",
+                type: "warning"
+            });
+            return;
+        }
+        if($("#sceneName").val()===''){
+            swal({
+                title: "请输入场景名称",
+                type: "warning"
+            });
+            return;
+        }
+        if($("#scadaId").val()===''){
+            swal({
+                title: "请输入对接平台ID",
+                type: "warning"
+            });
+            return;
+        }
+
+        var sceneId = $("#sceneId").val();
+        var sceneName = $("#sceneName").val();
+        var scadaId = $("#scadaId").val();
+
+        $.ajax({
+            // contentType: 'application/json;charset=UTF-8',
+            url:"/scene/addScene",
+            data:{'sceneId':sceneId,"sceneName":sceneName,"scadaSid":scadaId},
+            type:"POST",
+            dataType:"json",
+            success:function (data) {
+
+                if(data.code===0){
+                    swal({
+                        title: data.msg,
+                        type: "error"
+                    });
+                }else {
+                    swal({
+                        title: data.data,
+                        type: "success"
+                    },function(){
+                        $('#addSceneModal').modal('hide');
+                        window.location.reload();
+                    });
+                }
+            }
+        })
+
+    }
+</script>

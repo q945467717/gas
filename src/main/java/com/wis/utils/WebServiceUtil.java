@@ -4,9 +4,9 @@ import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.springframework.stereotype.Component;
 
 public class WebServiceUtil {
-
 
     public static Client createWebServiceClient(String wsdl){
 

@@ -1,5 +1,6 @@
 package com.wis.controller;
 
+import com.wis.pojo.po.User;
 import com.wis.pojo.vo.ItemInfo;
 import com.wis.pojo.vo.SceneInfo;
 import com.wis.service.ItemService;
@@ -8,6 +9,9 @@ import com.wis.service.SceneService;
 import com.wis.utils.ExcelUtil;
 import com.wis.utils.ItemTypeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -46,7 +51,11 @@ public class MainController {
 
     //跳转到管理员首页
     @RequestMapping("/admin/index")
-    public String adminIndex(){
+    public String adminIndex(Model model){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        model.addAttribute("user",user);
 
         return "admin/index";
     }
@@ -58,48 +67,92 @@ public class MainController {
     }
 
     //文件下载
-    @RequestMapping("/downloadFile")
-    public String downloadFile(HttpServletResponse response) throws UnsupportedEncodingException {
+//    @RequestMapping("/downloadFile")
+//    public String downloadFile(HttpServletResponse response) throws UnsupportedEncodingException {
+//
+//        String filename="demo.xls";
+//        //String filePath = "D:\\IdeaProjects\\gas\\src\\main\\resources\\static\\file" ;
+//
+//       String  filePath = "D:\\IdeaProjects\\gas\\src\\main\\resources\\static\\file" ;
+//
+//
+//
+//        File file = new File(filePath + "/" + filename);
+//        if(file.exists()){ //判断文件父目录是否存在
+//            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+//            response.setCharacterEncoding("UTF-8");
+//            // response.setContentType("application/force-download");
+//            response.setHeader("Content-Disposition","attachment;fileName="+java.net.URLEncoder.encode(filename,"UTF-8"));
+//            byte[] buffer = new byte[1024];
+//            FileInputStream fis = null; //文件输入流
+//            BufferedInputStream bis = null;
+//
+//            OutputStream os = null; //输出流
+//            try {
+//                os = response.getOutputStream();
+//                fis = new FileInputStream(file);
+//                bis = new BufferedInputStream(fis);
+//                int i = bis.read(buffer);
+//                while(i != -1){
+//                    os.write(buffer);
+//                    i = bis.read(buffer);
+//                }
+//
+//            } catch (Exception e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//            System.out.println("----------file download---" + filename);
+//            try {
+//                bis.close();
+//                fis.close();
+//            } catch (IOException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//        }
+//        return null;
+//    }
 
-        String filename="demo.xls";
-        //String filePath = "D:\\IdeaProjects\\gas\\src\\main\\resources\\static\\file" ;
-        String filePath = "D:\\IdeaProjects\\gas\\src\\main\\resources\\static\\file" ;
-        File file = new File(filePath + "/" + filename);
-        if(file.exists()){ //判断文件父目录是否存在
-            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
-            response.setCharacterEncoding("UTF-8");
-            // response.setContentType("application/force-download");
-            response.setHeader("Content-Disposition","attachment;fileName="+java.net.URLEncoder.encode(filename,"UTF-8"));
-            byte[] buffer = new byte[1024];
-            FileInputStream fis = null; //文件输入流
-            BufferedInputStream bis = null;
 
-            OutputStream os = null; //输出流
-            try {
-                os = response.getOutputStream();
-                fis = new FileInputStream(file);
-                bis = new BufferedInputStream(fis);
-                int i = bis.read(buffer);
-                while(i != -1){
-                    os.write(buffer);
-                    i = bis.read(buffer);
-                }
+    @ResponseBody
+    @RequestMapping(value = "/downloadFile")
+    public void downloadFile(HttpServletResponse response) throws IOException {
+        InputStream f= this.getClass().getResourceAsStream("/static/file/demo.xls");
 
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+        response.reset();
+        response.setContentType("application/x-msdownload;charset=utf-8");
+        try {
+            response.setHeader("Content-Disposition", "attachment;filename="+ new String(("demo" + ".xls").getBytes("gbk"), "iso-8859-1"));//下载文件的名称
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        ServletOutputStream sout = response.getOutputStream();
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            bis = new BufferedInputStream(f);
+            bos = new BufferedOutputStream(sout);
+            byte[] buff = new byte[2048];
+            int bytesRead;
+            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                bos.write(buff, 0, bytesRead);
             }
-            System.out.println("----------file download---" + filename);
-            try {
+            bos.flush();
+            bos.close();
+            bis.close();
+        } catch (final IOException e) {
+            throw e;
+        } finally {
+            if (bis != null){
                 bis.close();
-                fis.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            }
+            if (bos != null){
+                bos.close();
             }
         }
-        return null;
     }
+
     //上传Excel文件
     @PostMapping("/uploadFile")
     public String uploadFile(HttpServletRequest request){

@@ -41,4 +41,7 @@ public interface GasApiMapper {
     @Update("update wis_item set wtzt=#{wtzt} where id=#{id}")
     void updateWtzt(Integer wtzt,Integer id);
 
+    @Select("select * from wis_item_data where pname=#{Pname} and s_id=#{scadaSid}")
+    ItemData findItemDataByPnameAndScadaSid(String Pname,String  scadaSid);
+
 }

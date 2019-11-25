@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.xml.namespace.QName;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class GasApplicationTests {
@@ -62,8 +64,10 @@ public class GasApplicationTests {
 
         try {
 
-            Client client = WebServiceUtil.createWebServiceClient("http://www.webxml.com.cn/WebServices/ChinaZipSearchWebService.asmx?wsdl");
-            Object[] objects = client.invoke("getAddressByZipCode","730900");
+            Client client = WebServiceUtil.createWebServiceClient("http://www.webxml.com.cn/WebServices/TrainTimeWebService.asmx?wsdl");
+            QName qName = new QName("http://WebXml.com.cn/","getStationNameDataSet");
+
+            Object[] objects = client.invoke(qName);
 
             String json = JSON.toJSONString(objects);
 

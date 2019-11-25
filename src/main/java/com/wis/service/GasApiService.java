@@ -30,4 +30,6 @@ public interface GasApiService {
 
     List<ItemInfo> getEquipmentInfo(String sceneId);
 
+    String getElectricity(String sceneId);
+
 }

@@ -48,6 +48,7 @@ public class AopConfiguration {
     @Before("findItemLig()")
     public void itemBeforeLog(JoinPoint joinPoint) throws RuntimeException{
 
+        System.out.println(joinPoint);
         logger.info("查询物体");
 
     }

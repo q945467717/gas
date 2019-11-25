@@ -151,6 +151,26 @@ public class GasController {
     }
 
     /**
+     * 获取市电信息
+     * @param response 响应状态码
+     * @param sceneId 场景ID
+     * @return 市电状态
+     */
+    @PostMapping("/getElectricity")
+    public Result getElectricity(HttpServletResponse response,String sceneId){
+
+        try {
+            gasApiService.getElectricity(sceneId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResultUtil.error(0,e.getMessage());
+        }
+
+        return ResultUtil.success(response.getStatus(),gasApiService.getElectricity(sceneId));
+    }
+
+
+    /**
      * webservice接口请求数据
      * @param response 响应状态码
      * @param sceneId 场景SID

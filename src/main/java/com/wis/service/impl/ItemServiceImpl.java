@@ -165,7 +165,7 @@ public class ItemServiceImpl implements ItemService {
         for(ItemData itemData:itemDataList){
             for(Integer dataSource:dataSourceList){
                 if(itemData.getPid()==dataSource){
-                    //itemMapper.updateItemData(itemData.getScadaSid(),itemId,dataSource);
+                    itemMapper.updateItemData(scene.getScadaSid(),itemId,itemData.getPid());
                     errorList.remove(dataSource);
                 }
             }

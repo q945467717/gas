@@ -1,0 +1,119 @@
+<div class="modal-dialog" style="width: 300px" xmlns:th="http://www.thymeleaf.org" >
+    <div class="modal-content" style="width: 280px">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">新增物体</h4>
+        </div>
+        <div class="modal-body" style="width: 250px">
+            <div style="width: 200px">请输入物体名称<input type="text" id="aitemName"/></div>
+            <div style="width: 200px">请输入物体UID  <input type="text" id="auid"/></div>
+            <div style="width: 200px">请输入物体内容<input type="text" id="atext"/></div>
+            <div style="width: 200px">请选择所属场景
+                <select class="form-control" id="ascene">
+                    <option>请选择所属场景</option>
+                    <option th:each="sceneInfo:${sceneInfoList}" th:text="${sceneInfo.sceneName}"></option>
+                </select>
+            </div>
+            <div>请选择物体类型
+                <select class="form-control" id="atype">
+                    <option>请选择物体类型</option>
+                    <option>办公大楼</option>
+                    <option>摄像头</option>
+                    <option>信息牌类</option>
+                    <option>阀门</option>
+                    <option>地面</option>
+                    <option>管线</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="addItem()" >确定</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function addItem() {
+
+        if($("#aitemName").val()===''){
+            swal({
+                title: "请输入物体名称",
+                type: "warning"
+            });
+            return;
+        }
+        if($("#auid").val()===''){
+            swal({
+                title: "请输入物体UID",
+                type: "warning"
+            });
+            return;
+        }
+        if($("#atext").val()===''){
+            swal({
+                title: "请输入物体内容",
+                type: "warning"
+            });
+            return;
+        }
+
+        var itemName = $("#aitemName").val();
+        var uid = $("#auid").val();
+        var text = $("#atext").val();
+
+        var sobj = document.getElementById('ascene');
+        var sindex = sobj.selectedIndex;
+        var scene = sobj.options[sindex].text;
+
+        if(scene==="请选择所属场景"){
+            swal({
+                title: "请选择所属场景",
+                type: "warning"
+            });
+            return;
+        }
+
+        var tobj = document.getElementById('atype');
+        var tindex = tobj.selectedIndex;
+        var type = tobj.options[tindex].text;
+
+        if(type==="请选择物体类型"){
+            swal({
+                title: "请选择物体类型",
+                type: "warning"
+            });
+            return;
+        }
+
+        $.ajax({
+            // contentType: 'application/json;charset=UTF-8',
+            url:"/item/addItem",
+            data:{'itemName':itemName,"sceneName":scene,"uid":uid,"text":text,"itemType":type},
+            type:"POST",
+            dataType:"json",
+            success:function (data) {
+                if(data.code===0){
+                    swal({
+                        title: data.msg,
+                        type: "error"
+                    });
+                }else {
+                    swal({
+                        title: data.data,
+                        type: "success"
+                    },function(){
+                        $('#addItemModal').modal('hide');
+                        $("#table").bootstrapTable('refresh', {
+                            url:"/item/itemInfoList"
+
+                        });
+                        //window.location.reload();
+                    });
+                }
+            }
+        })
+
+    }
+</script>

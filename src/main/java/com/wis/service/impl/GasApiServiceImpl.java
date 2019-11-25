@@ -6,8 +6,6 @@ import com.wis.pojo.po.ItemData;
 import com.wis.pojo.po.Scene;
 import com.wis.pojo.vo.ItemInfo;
 import com.wis.service.GasApiService;
-import com.wis.utils.WebServiceUtil;
-import org.apache.cxf.endpoint.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,16 +88,21 @@ public class GasApiServiceImpl implements GasApiService {
             StringBuffer html=new StringBuffer();
 
             if(!scene.getSceneStatus().equals("正常")){
-                String s = "<color=white><size=20>"+scene.getScadaName()+"</size> ；"+date+"</color><color=red>"+scene.getSceneStatus()+"</color>";
+                String s = "<color=white><size=20>"+scene.getScadaName()+"</size> ；"+date+"</color><color=red>"+scene.getSceneStatus()+"</color>；";
                 html.append(s);
             }else {
-                String s = "<color=white><size=20>"+scene.getScadaName()+"</size> ；"+date+"</color><color=green><size=18>；"+scene.getSceneStatus()+"</size></color>";
+                String s = "<color=white><size=20>"+scene.getScadaName()+"</size> ；"+date+"</color><color=green><size=18>；"+scene.getSceneStatus()+"</size></color>；";
+                html.append(s);
+            }
+            if(scene.getSceneId().equals("20180926134038328363371")){
+
+                String s ="<color=white><size=20>市电状态:</size></color>";
                 html.append(s);
             }
             return html;
 
         }catch (Exception e){
-            String s = "<color=red><size=20>场景信息异常</size></color>";
+            String s = "<color=red><size=20>未获取到最新数据</size></color>";
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append(s);
             return stringBuffer;
@@ -219,5 +222,22 @@ public class GasApiServiceImpl implements GasApiService {
             itemInfoList.add(itemInfo);
         }
         return itemInfoList;
+    }
+
+    @Override
+    public String getElectricity(String sceneId) {
+
+        Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
+
+        if(scene.getSceneId().equals("20180926134038328363371")){
+
+            ItemData itemData = gasApiMapper.findItemDataByPnameAndScadaSid("九眼桥CNG市电状态","60");
+            if(itemData!=null){
+                return itemData.getPvalue();
+            }
+        }
+
+        return null;
+
     }
 }
