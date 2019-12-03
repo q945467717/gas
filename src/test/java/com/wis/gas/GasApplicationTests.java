@@ -17,21 +17,24 @@ import javax.xml.namespace.QName;
 @SpringBootTest
 public class GasApplicationTests {
 
-
     @Test
     public void contextLoads(){
 
         try {
-            Client client = WebServiceUtil.createWebServiceClient("http://www.webxml.com.cn/WebServices/TrainTimeWebService.asmx?wsdl");
-            Object[] objects = client.invoke("getDetailInfoByTrainCode","Z50");
+            Client client = WebServiceUtil.createWebServiceClient("file:D://TrainTimeWebService.wsdl");
+            Object[] objects = client.invoke("getDetailInfoByTrainCode","Z50","");
+
             System.out.println(objects[0]);
+
+
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
+
     @Test
-    public void test() {
+    public void test8() {
 
 
         try {
@@ -64,8 +67,8 @@ public class GasApplicationTests {
 
         try {
 
-            Client client = WebServiceUtil.createWebServiceClient("http://www.webxml.com.cn/WebServices/TrainTimeWebService.asmx?wsdl");
-            QName qName = new QName("http://WebXml.com.cn/","getStationNameDataSet");
+            Client client = WebServiceUtil.createWebServiceClient("file:D://TrainTimeWebService.wsdl");
+            QName qName = new QName("http://WebXml.com.cn/","getVersionTime");
 
             Object[] objects = client.invoke(qName);
 
@@ -77,7 +80,7 @@ public class GasApplicationTests {
             e.printStackTrace();
         }
 
-
     }
+
 
 }
