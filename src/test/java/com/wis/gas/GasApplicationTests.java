@@ -1,9 +1,12 @@
 package com.wis.gas;
 
 import com.alibaba.fastjson.JSON;
+import com.wis.annotation.ApiResponse;
+import com.wis.exception.ApiException;
 import com.wis.pojo.po.Pvalues;
 import com.wis.pojo.po.ScadaData;
 import com.wis.pojo.po.User;
+import com.wis.utils.ResponseCode;
 import com.wis.utils.WebServiceUtil;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -11,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.xml.namespace.QName;
 import java.util.List;
