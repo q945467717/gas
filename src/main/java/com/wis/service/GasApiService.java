@@ -14,7 +14,7 @@ public interface GasApiService {
     List<Map> getItemYSBH(String sceneId);
 
     //获取场站整体情况
-    StringBuffer getPinfo(String sceneId);
+    String getPinfo(String sceneId);
 
     //更新设备告警信息
     void mnsj_func(String sceneId);
@@ -26,7 +26,7 @@ public interface GasApiService {
     StringBuffer getMsgInfo(String sceneId, String uid);
 
     //向webservice接口请求数据
-    void autoTask(String sceneId);
+    void autoTask(String sceneId) throws Exception;
 
     List<ItemInfo> getEquipmentInfo(String sceneId);
 

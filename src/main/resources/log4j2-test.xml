@@ -6,7 +6,6 @@
         <property name="log.sql.level">info</property>
     </properties>
 
-
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %l - %msg%n" />

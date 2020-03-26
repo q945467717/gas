@@ -39,6 +39,7 @@ public class ItemServiceImpl implements ItemService {
             itemInfo.setId(item.getId());
             itemInfo.setItemName(item.getCname());
             Scene scene = sceneMapper.findSceneById(item.getSid());
+            System.out.println(scene.getSceneName());
             itemInfo.setSceneName(scene.getSceneName());
             itemInfo.setItemType(ItemTypeUtil.type(item.getWtlx()));
             itemInfo.setUid(item.getUid());
@@ -155,7 +156,7 @@ public class ItemServiceImpl implements ItemService {
 
     //添加数据源
     @Override
-    public List addDataSource(Integer itemId, Integer[] dataSourceList) {
+    public List<Integer> addDataSource(Integer itemId, Integer[] dataSourceList) {
 
         List<Integer> errorList = new ArrayList<>(Arrays.asList(dataSourceList));
 

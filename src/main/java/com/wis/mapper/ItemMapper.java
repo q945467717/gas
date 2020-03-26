@@ -39,7 +39,7 @@ public interface ItemMapper {
     @Select("select * from wis_item_data where s_id=#{scadaId}")
     List<ItemData> findDataByScadaId(Integer scadaId);
 
-    @Update("update wis_item_data set item_id=#{itemId} where s_id=#{scadaId} and pid=#{pid}")
+    @Update("update wis_item_data set item_id=#{itemId} where s_id=#{scadaId} and pid=#{pid} and ptype='A")
     void updateItemData(Integer scadaId,Integer itemId,Integer pid);
 
 

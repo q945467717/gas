@@ -21,5 +21,5 @@ public interface ItemService {
 
     List<ItemDataInfo> checkItemData(Integer itemId);
 
-    List addDataSource(Integer itemId, Integer[] dataSourceList);
+    List<Integer> addDataSource(Integer itemId, Integer[] dataSourceList);
 }

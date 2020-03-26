@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://scada.service.springjdbc.integration.qjyj.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="http://scada.ws.qjyj.com/" name="ScadaStationServiceService" targetNamespace="http://scada.service.springjdbc.integration.qjyj.com/">
+  <wsdl:import location="http://portal.cdgas.com/QJYJWService/scadaService?wsdl=ScadaDataService.wsdl" namespace="http://scada.ws.qjyj.com/">
+    </wsdl:import>
+  <wsdl:binding name="ScadaStationServiceServiceSoapBinding" type="ns1:ScadaDataService">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="findAllStationsData">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="findAllStationsData">
+        <soap:body namespace="http://scada.ws.qjyj.com/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findAllStationsDataResponse">
+        <soap:body namespace="http://scada.ws.qjyj.com/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findStationDataBySids">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="findStationDataBySids">
+        <soap:body namespace="http://scada.ws.qjyj.com/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findStationDataBySidsResponse">
+        <soap:body namespace="http://scada.ws.qjyj.com/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findStationDataBySid">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input name="findStationDataBySid">
+        <soap:body namespace="http://scada.ws.qjyj.com/" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findStationDataBySidResponse">
+        <soap:body namespace="http://scada.ws.qjyj.com/" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ScadaStationServiceService">
+    <wsdl:port binding="tns:ScadaStationServiceServiceSoapBinding" name="ScadaStationServicePort">
+      <soap:address location="http://portal.cdgas.com/QJYJWService/scadaService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -27,8 +27,10 @@ public class AopConfiguration {
     public void apiLog(){}
     @Pointcut("execution(public * com.wis.mapper.ItemMapper.getItemListPage(..))")
     public void findItemLig(){}
+    @Pointcut("execution(public * com.wis.mapper.GasApiMapper.*(..))")
+    public void findsceneLig(){}
 
-    //@Before("apiLog()")
+//    @Before("apiLog()")
     public void beforeLog(JoinPoint joinPoint) throws RuntimeException{
         startTime.set(System.currentTimeMillis());
 
@@ -45,11 +47,19 @@ public class AopConfiguration {
         logger.info("ip:"+ipAddress);
     }
 
-    @Before("findItemLig()")
+//    @Before("findItemLig()")
     public void itemBeforeLog(JoinPoint joinPoint) throws RuntimeException{
 
         System.out.println(joinPoint);
         logger.info("查询物体");
+
+    }
+
+//    @Before("findsceneLig()")
+    public void findsceneLig(JoinPoint joinPoint) throws RuntimeException{
+
+        System.out.println(joinPoint);
+        logger.info("查询物体111");
 
     }
 

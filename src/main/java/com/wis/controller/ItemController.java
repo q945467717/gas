@@ -171,7 +171,7 @@ public class ItemController {
     public Result addDataSource(Integer itemId, @RequestParam("dataSourceList[]") Integer[] dataSourceList, HttpServletResponse response){
 
         try{
-            List list = itemService.addDataSource(itemId, dataSourceList);
+            List<Integer> list = itemService.addDataSource(itemId, dataSourceList);
             if(list.size()!=0){
                 return ResultUtil.success(1,"修改成功,但数据源"+list.toString()+"不存在,请重新设置");
             }

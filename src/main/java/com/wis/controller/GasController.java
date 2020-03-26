@@ -3,6 +3,8 @@ package com.wis.controller;
 import com.wis.pojo.vo.Result;
 import com.wis.service.GasApiService;
 import com.wis.utils.ResultUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -176,7 +180,7 @@ public class GasController {
      * @param sceneId 场景SID
      * @return 提示信息
      */
-    @PostMapping("/autoTask")
+    @RequestMapping("/autoTask")
     public Result autoTask(HttpServletResponse response,String sceneId){
 
         try {
