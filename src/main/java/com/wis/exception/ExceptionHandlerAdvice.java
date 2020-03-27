@@ -3,6 +3,7 @@ package com.wis.exception;
 import com.wis.pojo.vo.ApiResult;
 import com.wis.utils.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,4 +31,11 @@ public class ExceptionHandlerAdvice {
         ResponseCode code=e.getCode();
         return new ApiResult(code.getCode(),code.getMsg(),null);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ApiResult MethodArgumentNotValidException(MethodArgumentNotValidException e){
+        log.error(e.getMessage(),e);
+        return new ApiResult(ResponseCode.VALIDATED_ERROR.getCode(),ResponseCode.VALIDATED_ERROR.getMsg(),null);
+    }
+
 }

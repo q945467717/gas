@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.xml.namespace.QName;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -59,6 +60,13 @@ public class GasApplicationTests {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+    }
+
+    @Test
+    public void test3() {
+
+        System.out.println(new Date());
 
     }
 

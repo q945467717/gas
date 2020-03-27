@@ -1,5 +1,7 @@
 package com.wis.utils;
 
+import org.springframework.validation.annotation.Validated;
+
 public enum  ResponseCode {
 
     /**
@@ -13,7 +15,14 @@ public enum  ResponseCode {
     /**
      * 所有无法识别的异常默认的返回状态码
      */
-    SERVICE_ERROR(50000, "服务器异常");
+    SERVICE_ERROR(50000, "服务器异常"),
+
+
+    VALIDATED_ERROR(10002,"请求参数错误");
+
+
+
+
     /**
      * 状态码
      */

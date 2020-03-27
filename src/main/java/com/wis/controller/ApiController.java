@@ -1,12 +1,10 @@
 package com.wis.controller;
 
 import com.wis.annotation.ApiResponse;
-import com.wis.exception.ApiException;
-import com.wis.pojo.po.User;
-import com.wis.pojo.vo.ItemInfo;
-import com.wis.utils.ResponseCode;
-import org.springframework.stereotype.Controller;
+import com.wis.dto.CheckedDateDTO;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @ApiResponse
@@ -14,16 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class ApiController {
 
     @PostMapping("/checkedDate")
-    public ItemInfo getUserById(@PathVariable Integer userId){
-        if(userId.equals(0)){
-            throw new ApiException(ResponseCode.RESOURCES_NOT_EXIST);
-        }
-        if(userId.equals(1)){
-            throw new RuntimeException();
-        }
-        ItemInfo itemInfo=new ItemInfo();
-        itemInfo.setItemName("zl");
-        itemInfo.setItemType("111");
-        return itemInfo;
+    public void checkedDate(@RequestBody @Validated CheckedDateDTO checkedDateDTO) {
+
     }
 }

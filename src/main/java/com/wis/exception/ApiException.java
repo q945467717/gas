@@ -1,7 +1,6 @@
 package com.wis.exception;
 
 import com.wis.utils.ResponseCode;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
