@@ -3,19 +3,26 @@ package com.wis.controller;
 import com.wis.pojo.vo.*;
 import com.wis.service.ItemService;
 import com.wis.service.SceneService;
+import com.wis.utils.ResponseCode;
 import com.wis.utils.ResultUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
 @RequestMapping("/item")
+@ApiIgnore
 public class ItemController {
 
     @Autowired
@@ -27,6 +34,7 @@ public class ItemController {
      * 物体管理和物体数据
      * @return 物体页面和数据
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/itemManage")
     public String itemManage(Model model){
 
@@ -37,7 +45,7 @@ public class ItemController {
     }
     @RequestMapping("/itemInfoList")
     @ResponseBody
-    public PageHelper<ItemInfo> itemInfoList(int type,String scene,String name,String uid,int limit,int offset,int page){
+    public PageHelper<ItemInfo> itemInfoList(int type,String scene,String name,String uid,int limit,int offset){
 
         PageHelper<ItemInfo> pageHelper = new PageHelper<>();
 
@@ -134,6 +142,7 @@ public class ItemController {
      */
     @RequestMapping("/deleteItem")
     @ResponseBody
+    @ApiOperation(value = "删除物体")
     public Result deleteScene(Integer id, HttpServletResponse response){
 
         try{

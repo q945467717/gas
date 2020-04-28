@@ -2,25 +2,22 @@ package com.wis.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.wis.config.RedisConfig;
+import com.wis.dto.CheckedDateDTO;
 import com.wis.mapper.GasApiMapper;
 import com.wis.pojo.po.*;
+import com.wis.pojo.vo.EquipmentInfo;
 import com.wis.pojo.vo.ItemInfo;
 import com.wis.service.GasApiService;
 import com.wis.utils.RedisUtil;
-import com.wis.utils.WebServiceUtil;
 import com.wis.webservice.PValueDTO;
 import com.wis.webservice.ScadaDataService;
 import com.wis.webservice.ScadaStationServiceService;
 import com.wis.webservice.StationDTO;
-import org.apache.cxf.endpoint.Client;
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.namespace.QName;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -49,22 +46,22 @@ public class GasApiServiceImpl implements GasApiService {
             map.put("wtlx", item.getWtlx());
             map.put("cname", item.getCname());
             map.put("tblx", item.getTblx());
-            StringBuffer content = new StringBuffer();
-            if (item.getWtlx() == 3) {
-                List<ItemData> itemDataList = gasApiMapper.findItemDataByItemIdAndScadaSid(item.getId(), scene.getScadaSid());
+//            StringBuffer content = new StringBuffer();
+//            if (item.getWtlx() == 3) {
+//                List<ItemData> itemDataList = gasApiMapper.findItemDataByItemIdAndScadaSid(item.getId(), scene.getScadaSid());
+//
+//                for (ItemData itemData : itemDataList) {
+//
+//                    String s = itemData.getPname() + itemData.getPvalue() + itemData.getUnit() + ";";
+//                    content.append(s);
+//                }
+//
+//                map.put("content", content);
+//            } else {
+//                map.put("content", item.getContent());
+//            }
 
-                for (ItemData itemData : itemDataList) {
-
-                    String s = itemData.getPname() + itemData.getPvalue() + itemData.getUnit() + ";";
-                    content.append(s);
-                }
-
-                map.put("content", content);
-            } else {
-                map.put("content", item.getContent());
-            }
-
-            map.put("wtzt", item.getWtzt());
+//            map.put("wtzt", item.getWtzt());
 
             mapList.add(map);
         }
@@ -76,48 +73,61 @@ public class GasApiServiceImpl implements GasApiService {
     @Override
     public List<Map> getItemYSBH(String sceneId) {
 
-        if (redisUtil.hasKey("item:status:"+sceneId)) {
+//        if (redisUtil.hasKey("item:status:"+sceneId)) {
+//
+//            List<Object> objects = redisUtil.lGet("item:status:"+sceneId, 0, -1);
+//
+//            List<Map> mapList = new ArrayList<>();
+//            for(Object object:objects){
+//
+//                String s = JSON.toJSONString(object);
+//                Map map = JSONObject.parseObject(s, Map.class);
+//
+//                mapList.add(map);
+//
+//            }
+//
+//            return mapList;
+//
+//        }
 
-            List<Object> objects = redisUtil.lGet("item:status:"+sceneId, 0, -1);
+        List<Item> itemList = gasApiMapper.findWarningItem(sceneId);
 
-            List<Map> mapList = new ArrayList<>();
-            for(Object object:objects){
-
-                String s = JSON.toJSONString(object);
-                Map map = JSONObject.parseObject(s, Map.class);
-
-                mapList.add(map);
-
-            }
-
-            return mapList;
-
-        }
-
-        List<Item> itemList = gasApiMapper.findItemBySidAndWarning(sceneId);
+        Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
 
         List<Map> mapList = new ArrayList<>();
 
         for (Item item : itemList) {
+
+            Assets assets = gasApiMapper.findByAid(item.getAid(), scene.getScadaSid());
+
+            List<ItemData> warningItemData = gasApiMapper.findWarningItemData(scene.getScadaSid(), item.getId());
+
             Map<String, Object> map = new HashMap<>();
 
             map.put("uid", item.getUid());
             map.put("wtlx", item.getWtlx());
             map.put("wtzt", item.getWtzt());
-            map.put("qpzt", item.getQpzt());
+            if (assets != null) {
+                map.put("assetsName", assets.getAssetsName());
+            } else {
+                map.put("assetsName", 0);
+            }
+            map.put("cname", item.getCname());
+
+            map.put("warningData", warningItemData);
+
 
             mapList.add(map);
 
-            redisUtil.lSet("item:status:"+sceneId,map,100);
+            //   redisUtil.lSet("item:status:"+sceneId,map,100);
         }
 
         //redisUtil.lSet("item:status", mapList);
-        System.out.println(mapList);
 
         return mapList;
     }
 
-    //    @Cacheable(value = RedisConfig.REDIS_KEY_DATABASE, key = "'pms:pinfo:'+#id")
     @Override
     public String getPinfo(String sceneId) {
 
@@ -279,18 +289,43 @@ public class GasApiServiceImpl implements GasApiService {
     }
 
     @Override
-    public List<ItemInfo> getEquipmentInfo(String sceneId) {
+    public List<EquipmentInfo> getEquipmentInfo(String sceneId, String text) {
+
+        System.out.println(text);
 
         List<Item> itemList = gasApiMapper.findItemBySidAndLx(sceneId);
 
-        List<ItemInfo> itemInfoList = new ArrayList<>();
+        List<EquipmentInfo> itemInfoList = new ArrayList<>();
 
         for (Item item : itemList) {
-            ItemInfo itemInfo = new ItemInfo();
-            itemInfo.setUid(item.getUid());
-            itemInfo.setItemName(item.getCname());
 
-            itemInfoList.add(itemInfo);
+            Scene scene = gasApiMapper.findSceneBySceneId(item.getSid());
+
+            Assets assets = gasApiMapper.findByAid(item.getAid(), scene.getScadaSid());
+
+            if (assets != null) {
+                if( assets.getAssetsName().contains(text)){
+                    EquipmentInfo equipmentInfo = new EquipmentInfo();
+                    equipmentInfo.setAssets(assets);
+                    equipmentInfo.setCheckedDataList(gasApiMapper.findCheckDataByAid(item.getAid(), scene.getScadaSid()));
+                    equipmentInfo.setUid(item.getUid());
+                    equipmentInfo.setItemName(item.getCname());
+                    equipmentInfo.setStatus(item.getWtzt());
+
+                    itemInfoList.add(equipmentInfo);
+                }
+            }else {
+                if(item.getCname().contains(text)){
+                    EquipmentInfo equipmentInfo = new EquipmentInfo();
+                    equipmentInfo.setCheckedDataList(gasApiMapper.findCheckDataByAid(item.getAid(), scene.getScadaSid()));
+                    equipmentInfo.setUid(item.getUid());
+                    equipmentInfo.setItemName(item.getCname());
+                    equipmentInfo.setStatus(item.getWtzt());
+
+
+                    itemInfoList.add(equipmentInfo);
+                }
+            }
         }
         return itemInfoList;
     }
@@ -300,15 +335,43 @@ public class GasApiServiceImpl implements GasApiService {
 
         Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
 
-        if ("20180926134038328363371".equals(scene.getSceneId())) {
+        ItemData itemData = gasApiMapper.findItemDataByPnameAndScadaSid("%市电状态", scene.getScadaSid());
 
-            ItemData itemData = gasApiMapper.findItemDataByPnameAndScadaSid("九眼桥CNG市电状态", "60");
-            if (itemData != null) {
-                return itemData.getPvalue();
-            }
+        if (itemData != null) {
+            return itemData.getPvalue();
+
         }
 
         return null;
 
+    }
+
+    @Override
+    public List<CheckedDateDTO> getCheckedDate(Integer sceneId) {
+        return gasApiMapper.findAllCheckDate(sceneId);
+    }
+
+    @Override
+    public String getSceneId(String id) {
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("http://localhost:8081/init/scene.config")
+                .build();
+
+        Call call = okHttpClient.newCall(request);
+
+        try {
+            Response response = call.execute();
+            if (response.body() != null) {
+                Map<String, Object> map = JSONObject.parseObject(response.body().string());
+                return (String) map.get(id);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

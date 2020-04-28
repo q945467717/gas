@@ -9,7 +9,7 @@
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
             <ul class="nav" id="side-menu">
-                <li class="nav-header" style="text-align: center;height: 105px;border-bottom: 2px black solid">
+                <li class="nav-header" style="text-align: center;height: 105px">
                     <div class="dropdown profile-element">
                         <span class="clear" >
                                 <strong class="font-bold" >您好！
@@ -100,6 +100,18 @@
                     </a>
                 </li>
                 <li>
+                    <a  class="J_menuItem" th:href="@{/assets/assetsManage}" title="物体管理">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">资产管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a  class="J_menuItem" th:href="@{/checked/checkedManage}" title="物体管理">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">巡检记录</span>
+                    </a>
+                </li>
+                <li>
                     <a  class="J_menuItem" th:href="@{/item/importItem}" title="批量导入物体">
                         <i class="fa fa-users"></i>
                         <span class="nav-label">批量导入物体</span>
@@ -165,7 +177,6 @@
 
 <script>
     $(function () {
-        console.log("hello");
         $(".panel-collapse .collapse .in").collapse('hide')
     })
 </script>

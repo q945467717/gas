@@ -19,6 +19,15 @@ public class Item extends Page implements Serializable {
     private int tblx;
     private int wtzt;
     private int qpzt;
+    private Integer aid;
+
+    public Integer getAid() {
+        return aid;
+    }
+
+    public void setAid(Integer aid) {
+        this.aid = aid;
+    }
 
     public void setSid(String sid) {
         this.sid = sid;

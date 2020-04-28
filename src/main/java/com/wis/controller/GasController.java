@@ -1,15 +1,16 @@
 package com.wis.controller;
 
+import com.wis.mapper.SceneMapper;
+import com.wis.pojo.po.Scene;
+import com.wis.pojo.vo.ApiResult;
 import com.wis.pojo.vo.Result;
 import com.wis.service.GasApiService;
+import com.wis.utils.ResponseCode;
 import com.wis.utils.ResultUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -22,6 +23,8 @@ public class GasController {
 
     @Autowired
     private GasApiService gasApiService;
+    @Autowired
+    private SceneMapper sceneMapper;
 
     /**
      * 查询所有物体
@@ -29,7 +32,11 @@ public class GasController {
      * @param sceneId 场景ID
      * @return 场景所有物体
      */
+    @ApiOperation(value = "查询所有物体",notes = "")
     @PostMapping("/getItemTable")
+    @ApiImplicitParams(
+            @ApiImplicitParam(name = "sceneId",value = "场景ID",required=true)
+    )
     public Result getItemTable(HttpServletResponse response,String sceneId){
 
         try {
@@ -48,6 +55,7 @@ public class GasController {
      * @param sceneId 场景ID
      * @return 会产生告警的设备信息
      */
+    @ApiOperation("会产生告警的设备信息")
     @PostMapping("/getItemYSBH")
     public Result getItemYSBH(HttpServletResponse response,String sceneId){
 
@@ -67,6 +75,7 @@ public class GasController {
      * @param sceneId 场景SID
      * @return 提示信息
      */
+    @ApiOperation("场站整体情况")
     @PostMapping("/getPinfo")
     public Result getPinfo(HttpServletResponse response,String sceneId){
 
@@ -86,6 +95,7 @@ public class GasController {
      * @param sceneId 场景SID
      * @return 提示信息
      */
+    @ApiOperation("更新告警信息")
     @PostMapping("/mnsj_func")
     public Result mnsj_func(HttpServletResponse response,String sceneId){
 
@@ -106,6 +116,7 @@ public class GasController {
      * @param uid 物体UID
      * @return 提示信息
      */
+    @ApiOperation("相机实时画面页面")
     @PostMapping("/getCameraInfo")
     public Result getCameraInfo(HttpServletResponse response, String sceneId, String uid){
 
@@ -120,17 +131,18 @@ public class GasController {
 
     }
 
+    @ApiOperation("获取资产信息")
     @PostMapping("/getEquipmentInfo")
-    public Result getEquipmentInfo(HttpServletResponse response, String sceneId){
+    public Result getEquipmentInfo(HttpServletResponse response, String sceneId,String text){
 
         try {
-            gasApiService.getEquipmentInfo(sceneId);
+            gasApiService.getEquipmentInfo(sceneId,text);
         }catch (Exception e){
             e.printStackTrace();
             return ResultUtil.error(0,e.getMessage());
         }
 
-        return ResultUtil.success(response.getStatus(),gasApiService.getEquipmentInfo(sceneId));
+        return ResultUtil.success(response.getStatus(),gasApiService.getEquipmentInfo(sceneId,text));
 
     }
 
@@ -141,6 +153,8 @@ public class GasController {
      * @param uid 物体UID
      * @return 提示信息
      */
+
+    @ApiOperation("设备数据信息")
     @PostMapping("/getMsgInfo")
     public Result getMsgInfo(HttpServletResponse response,String sceneId,String uid){
 
@@ -160,6 +174,8 @@ public class GasController {
      * @param sceneId 场景ID
      * @return 市电状态
      */
+
+    @ApiOperation("获取市电信息")
     @PostMapping("/getElectricity")
     public Result getElectricity(HttpServletResponse response,String sceneId){
 
@@ -180,7 +196,9 @@ public class GasController {
      * @param sceneId 场景SID
      * @return 提示信息
      */
-    @RequestMapping("/autoTask")
+
+    @ApiOperation("webservice接口请求数据")
+    @GetMapping("/autoTask")
     public Result autoTask(HttpServletResponse response,String sceneId){
 
         try {
@@ -191,6 +209,26 @@ public class GasController {
         }
 
         return ResultUtil.success(response.getStatus(),"成功");
+    }
+
+    @ApiOperation("获取巡检数据")
+    @GetMapping("/getCheckDate")
+    public ApiResult checkedDate(String sceneId){
+
+        Scene scene = sceneMapper.findSceneById(sceneId);
+
+        if(scene==null){
+            return new ApiResult(ResponseCode.VALIDATED_ERROR,null);
+
+        }
+        return new ApiResult(ResponseCode.SUCCESS,gasApiService.getCheckedDate(scene.getScadaSid()));
+    }
+
+    @ApiOperation("获取场景ID")
+    @GetMapping("/sceneId/{id}")
+    public ApiResult getSceneId(@PathVariable("id")String id){
+        return new ApiResult(ResponseCode.SUCCESS,gasApiService.getSceneId(id));
+
     }
 
 }

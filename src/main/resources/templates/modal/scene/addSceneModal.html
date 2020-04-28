@@ -5,8 +5,8 @@
             <h4 class="modal-title" id="myModalLabel">新增场景</h4>
         </div>
         <div class="modal-body" style="width: 250px">
-            <div style="width: 200px">请输入场景ID:<input type="text" id="sceneId" /></div>
-            <div style="width: 200px">请输入场景名称  <input type="text" id="sceneName" /></div>
+            <div style="width: 200px">请输入模模搭ID:<input type="text" id="mid" /></div>
+            <div style="width: 200px">请输入场景名称: <input type="text" id="sceneName" /></div>
             <div style="width: 200px">请输入对接平台ID：<input type="text" id="scadaId" /></div>
         </div>
         <div class="modal-footer">
@@ -20,9 +20,9 @@
 
     function addScene() {
 
-        if($("#sceneId").val()===''){
+        if($("#mid").val()===''){
             swal({
-                title: "请输入场景ID",
+                title: "请输入模模搭ID",
                 type: "warning"
             });
             return;
@@ -42,14 +42,14 @@
             return;
         }
 
-        var sceneId = $("#sceneId").val();
+        var mid = $("#mid").val();
         var sceneName = $("#sceneName").val();
         var scadaId = $("#scadaId").val();
 
         $.ajax({
             // contentType: 'application/json;charset=UTF-8',
             url:"/scene/addScene",
-            data:{'sceneId':sceneId,"sceneName":sceneName,"scadaSid":scadaId},
+            data:{'momodaId':mid,"sceneName":sceneName,"scadaSid":scadaId},
             type:"POST",
             dataType:"json",
             success:function (data) {

@@ -29,7 +29,7 @@ public class ResponseResultHandlerAdvice implements ResponseBodyAdvice {
                 return o;
             }else{
                 // 只有正常返回的结果才会进入这个判断流程，所以返回正常成功的状态码
-                return new ApiResult(ResponseCode.SUCCESS.getCode(),ResponseCode.SUCCESS.getMsg(),o);
+                return new ApiResult(ResponseCode.SUCCESS,o);
 
             }
         }

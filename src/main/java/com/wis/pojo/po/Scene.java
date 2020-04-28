@@ -12,6 +12,15 @@ public class Scene {
     private Date upTime;
     private String scadaName;
     private String sceneStatus;
+    private String momodaId;
+
+    public String getMomodaId() {
+        return momodaId;
+    }
+
+    public void setMomodaId(String momodaId) {
+        this.momodaId = momodaId;
+    }
 
     public void setSceneId(String sceneId) {
         this.sceneId = sceneId;

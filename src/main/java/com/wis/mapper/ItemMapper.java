@@ -42,6 +42,18 @@ public interface ItemMapper {
     @Update("update wis_item_data set item_id=#{itemId} where s_id=#{scadaId} and pid=#{pid} and ptype='A")
     void updateItemData(Integer scadaId,Integer itemId,Integer pid);
 
+    @Select("select uid from wis_item where sid=#{sid} and aid=#{aid}")
+    Item findByAidAndSid(String sid,Integer aid);
+
+    @Select("select uid,id,cname from wis_item where sid=#{sid} and wtlx=3")
+    List<Item> findUidByLxAndSceneId(String sid);
+
+    @Select("select * from wis_item where sid=#{sceneId} and wtlx in (2,3,4)")
+    List<Item> findBySceneId(String sceneId);
+
+    @Update("update wis_item set aid=#{aid} where sid=#{sceneId} and uid=#{uid}")
+    void updateAid(Integer aid,String sceneId,String uid);
+
 
 
 }

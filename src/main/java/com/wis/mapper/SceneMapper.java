@@ -25,10 +25,21 @@ public interface SceneMapper {
     @Delete("delete from wis_scene where id=#{id}")
     void deleteSceneById(Integer id);
 
-    @Insert("insert into wis_scene(sceneid,cname,addtime,scada_sid,uptime) values(#{sceneId},#{sceneName},#{addTime},#{scadaSid},#{upTime})")
+    @Insert("insert into wis_scene(momoda_id,cname,addtime,scada_sid,uptime) values(#{momodaId},#{sceneName},#{addTime},#{scadaSid},#{upTime})")
     void addScene(Scene scene);
 
-    @Update("update wis_scene set sceneid=#{sceneId},cname=#{sceneName},scada_sid=#{scadaSid} where id=#{id}")
-    void updateSceneById(Integer id,String sceneId,String sceneName,Integer scadaSid);
+    @Update("update wis_scene set momoda_id=#{momodaId},cname=#{sceneName},scada_sid=#{scadaSid} where id=#{id}")
+    void updateSceneById(Integer id,String momodaId,String sceneName,Integer scadaSid);
+
+    @ResultMap("SceneResultMap")
+    @Select("select sceneid,s_name from wis_scene where scada_sid=#{sid}")
+    Scene findBySid(Integer sid);
+
+    //匹配sid和momodaid
+    @Update("update wis_scene set sceneid=#{sceneId} where momoda_id=#{mid}")
+    void matchingId(String sceneId,String mid);
+
+    @Select("select * from wis_scene where momoda_id=#{mid}")
+    Scene findByMomodaId(String mid);
 
 }

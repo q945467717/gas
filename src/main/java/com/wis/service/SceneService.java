@@ -16,4 +16,11 @@ public interface SceneService {
 
     SceneInfo showScene(String sceneId);
 
+    //匹配场景id和模模搭id
+    void matchingSceneId();
+
+    //根据sid获取场景信息
+    SceneInfo  getScene(Integer sid);
+
+
 }

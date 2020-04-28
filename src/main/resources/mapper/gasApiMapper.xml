@@ -27,4 +27,27 @@
         <result column="warning" property="warning"/>
     </resultMap>
 
+    <resultMap id="AssetsResultMap" type="com.wis.pojo.po.Assets">
+        <id column="id" property="id"/>
+        <result column="assets_name" property="assetsName"/>
+        <result column="assets_manufacturer" property="assetsManufacturer"/>
+        <result column="assets_time" property="assetsTime"/>
+        <result column="assets_aid" property="aid"/>
+        <result column="assets_sid" property="assetsSid"/>
+    </resultMap>
+
+    <resultMap id="CheckedDataResultMap" type="com.wis.pojo.po.CheckedData">
+        <id column="id" property="id"/>
+        <result column="check_member" property="checkMember"/>
+        <result column="check_log" property="checkLog"/>
+        <result column="check_time" property="checkTime"/>
+        <result column="check_item_aid" property="itemAid"/>
+        <result column="item_status" property="status"/>
+        <result column="check_item_sid" property="sid"/>
+    </resultMap>
+    
+    <select id="findItemBySidAndLx" resultType="com.wis.pojo.po.Item">
+        select * from wis_item where sid=#{sceneId} and wtlx IN (2,3,4) order by id
+    </select>
+
 </mapper>

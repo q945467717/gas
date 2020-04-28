@@ -1,5 +1,7 @@
 package com.wis.service;
 
+import com.wis.dto.CheckedDateDTO;
+import com.wis.pojo.vo.EquipmentInfo;
 import com.wis.pojo.vo.ItemInfo;
 
 import java.util.List;
@@ -28,8 +30,14 @@ public interface GasApiService {
     //向webservice接口请求数据
     void autoTask(String sceneId) throws Exception;
 
-    List<ItemInfo> getEquipmentInfo(String sceneId);
+    List<EquipmentInfo> getEquipmentInfo(String sceneId,String text);
 
     String getElectricity(String sceneId);
+
+    //获取巡检巡查数据接口
+    List<CheckedDateDTO> getCheckedDate(Integer sceneId);
+
+    //根据id获取场景id
+    String getSceneId(String id);
 
 }

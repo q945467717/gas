@@ -10,6 +10,15 @@ public class ItemInfo implements Serializable {
     private String uid;
     private String text;
     private String itemType;
+    private Integer aid;
+
+    public Integer getAid() {
+        return aid;
+    }
+
+    public void setAid(Integer aid) {
+        this.aid = aid;
+    }
 
     public void setItemType(String itemType) {
         this.itemType = itemType;

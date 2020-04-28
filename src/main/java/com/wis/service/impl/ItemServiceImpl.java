@@ -39,7 +39,6 @@ public class ItemServiceImpl implements ItemService {
             itemInfo.setId(item.getId());
             itemInfo.setItemName(item.getCname());
             Scene scene = sceneMapper.findSceneById(item.getSid());
-            System.out.println(scene.getSceneName());
             itemInfo.setSceneName(scene.getSceneName());
             itemInfo.setItemType(ItemTypeUtil.type(item.getWtlx()));
             itemInfo.setUid(item.getUid());
@@ -173,5 +172,24 @@ public class ItemServiceImpl implements ItemService {
         }
         return errorList;
 
+    }
+
+    @Override
+    public List<ItemInfo> getItemListBySceneId(String sceneId) {
+
+
+        List<Item> itemList = itemMapper.findBySceneId(sceneId);
+
+        List<ItemInfo> itemInfoList = new ArrayList<>();
+
+
+        for(Item item:itemList){
+            ItemInfo itemInfo = new ItemInfo();
+            itemInfo.setUid(item.getUid());
+            itemInfo.setAid(item.getAid());
+
+            itemInfoList.add(itemInfo);
+        }
+        return itemInfoList;
     }
 }

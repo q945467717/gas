@@ -13,6 +13,7 @@
         <result column="uptime" property="upTime"/>
         <result column="s_name" property="scadaName"/>
         <result column="s_val" property="sceneStatus"/>
+        <result column="momoda_id" property="momodaId"/>
     </resultMap>
 
 </mapper>

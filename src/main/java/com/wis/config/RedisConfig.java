@@ -18,12 +18,14 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 import java.time.Duration;
 
 @EnableCaching
 @Configuration
-public class RedisConfig extends CachingConfigurerSupport {
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1600)
+public class RedisConfig {
 
     public  static final String REDIS_KEY_DATABASE="gas";
 
