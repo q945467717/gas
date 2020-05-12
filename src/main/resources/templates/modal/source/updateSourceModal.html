@@ -1,0 +1,49 @@
+<div class="modal-dialog" style="width: 300px" xmlns:th="http://www.thymeleaf.org" >
+    <div class="modal-content" style="width: 400px">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">设置名称</h4>
+        </div>
+        <div class="modal-body" style="width: 250px">
+            <div style="width: 200px">请输入名称：<input type="text" id="dataName"/></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button th:id="${id}" type="button" class="btn btn-primary" onclick="updateSource(this.id)" >确定</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateSource(id) {
+
+        var dataName = $("#dataName").val();
+
+        $.ajax({
+            // contentType: 'application/json;charset=UTF-8',
+            url:"/dataSource/"+id,
+            data:{"dataName":dataName},
+            type:"POST",
+            dataType:"json",
+            success:function (data) {
+                if(data.code!==10004){
+                    swal({
+                        title: data.msg,
+                        type: "error"
+                    });
+                }else {
+                    swal({
+                        title: data.msg,
+                        type: "success"
+                    },function(){
+                        $('#updateSourceModal').modal('hide');
+                        $("#table").bootstrapTable('refresh', {
+                            url:"/dataSource/list"
+
+                        });
+                    });
+                }
+            }
+        })
+    }
+</script>

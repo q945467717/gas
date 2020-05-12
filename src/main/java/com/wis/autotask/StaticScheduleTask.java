@@ -43,11 +43,17 @@ public class StaticScheduleTask {
 
                 List<ItemData> itemDataList = gasApiMapper.findDataByItemId(item.getId());
                 for (ItemData itemData : itemDataList) {
-                    if (itemData.getPstatus() != 0) {
+                    if (itemData.getPstatus() == 1||itemData.getPstatus()==4) {
                         gasApiMapper.updateWtzt(3, item.getId());
                         break;
-                    } else {
-                        gasApiMapper.updateWtzt(1, item.getId());
+                    } else if(itemData.getPstatus() == 2||itemData.getPstatus()==3){
+                        if(item.getWtzt()!=2){
+                            gasApiMapper.updateWtzt(2, item.getId());
+                        }
+                    }else {
+                        if(item.getWtzt()!=1){
+                            gasApiMapper.updateWtzt(1, item.getId());
+                        }
                     }
                 }
             }
@@ -58,7 +64,7 @@ public class StaticScheduleTask {
     /**
      * 定时调用模模搭实时数据接口，向场景推送数据
      */
-    @Scheduled(fixedRate = 45000)
+    //@Scheduled(fixedRate = 45000)
     private void sendItemData(){
 
         OkHttpClient okHttpClient = new OkHttpClient();

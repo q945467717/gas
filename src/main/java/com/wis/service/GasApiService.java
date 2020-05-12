@@ -1,8 +1,8 @@
 package com.wis.service;
 
 import com.wis.dto.CheckedDateDTO;
-import com.wis.pojo.vo.EquipmentInfo;
-import com.wis.pojo.vo.ItemInfo;
+import com.wis.pojo.po.Item;
+import com.wis.pojo.vo.*;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ public interface GasApiService {
     List<Map> getItemTable(String sceneId);
 
     //获取会产生告警的设备记录
-    List<Map> getItemYSBH(String sceneId);
+    List<WarningInfo> getItemYSBH(String sceneId);
 
     //获取场站整体情况
     String getPinfo(String sceneId);
@@ -22,7 +22,7 @@ public interface GasApiService {
     void mnsj_func(String sceneId);
 
     //获取摄像机实时画面接口
-    StringBuffer getCameraInfo(String sceneId, String uid);
+    List<CameraInfo> getCameraInfo(String sceneId, String[] uid);
 
     //获取设备数据接口
     StringBuffer getMsgInfo(String sceneId, String uid);
@@ -30,7 +30,7 @@ public interface GasApiService {
     //向webservice接口请求数据
     void autoTask(String sceneId) throws Exception;
 
-    List<EquipmentInfo> getEquipmentInfo(String sceneId,String text);
+    List<Item> getEquipmentInfo(String sceneId, Integer[] groupId);
 
     String getElectricity(String sceneId);
 
@@ -40,4 +40,12 @@ public interface GasApiService {
     //根据id获取场景id
     String getSceneId(String id);
 
+    ItemPanelInfo getItemInfo(Integer id);
+
+    void getWarning();
+
+    List<AssetsNavInfo> showAssets(String sceneId);
+
+
+    List<GroupInfo> showGroup(String sceneId);
 }

@@ -32,7 +32,7 @@ public interface SceneMapper {
     void updateSceneById(Integer id,String momodaId,String sceneName,Integer scadaSid);
 
     @ResultMap("SceneResultMap")
-    @Select("select sceneid,s_name from wis_scene where scada_sid=#{sid}")
+    @Select("select sceneid,s_name,cname from wis_scene where scada_sid=#{sid}")
     Scene findBySid(Integer sid);
 
     //匹配sid和momodaid

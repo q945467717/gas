@@ -23,4 +23,8 @@ public interface AssetsMapper {
     @Select("select * from wis_item_assets where assets_aid = #{aid}")
     Assets findByAid(Integer aid);
 
+    @ResultMap("AssetsResultMap")
+    @Select("select * from wis_item_assets where assets_sid = #{sid}")
+    List<Assets> findBySid(Integer sid);
+
 }

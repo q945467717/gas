@@ -55,6 +55,10 @@
         <result column="assets_time" property="assetsTime"/>
         <result column="assets_aid" property="aid"/>
         <result column="assets_sid" property="assetsSid"/>
+        <result column="assets_department" property="assetsDepartment"/>
+        <result column="assets_member" property="assetsMember"/>
+        <result column="assets_member_tel" property="memberTel"/>
+        <result column="assets_maintenance" property="assetsMaintenance"/>
     </resultMap>
 
 </mapper>

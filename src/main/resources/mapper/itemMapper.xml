@@ -38,4 +38,17 @@
         LIMIT #{offset},#{limit}
     </select>
 
+    <resultMap id="ItemDataResuleMap" type="com.wis.pojo.po.ItemData">
+        <id column="id" property="id"/>
+        <result column="s_id" property="scadaSid"/>
+        <result column="item_id" property="itemId"/>
+        <result column="pid" property="pid"/>
+        <result column="pname" property="pname"/>
+        <result column="pvalue" property="pvalue"/>
+        <result column="pstatus" property="pstatus"/>
+        <result column="unit" property="unit"/>
+        <result column="warning" property="warning"/>
+        <result column="data_name" property="dataName"/>
+    </resultMap>
+
 </mapper>

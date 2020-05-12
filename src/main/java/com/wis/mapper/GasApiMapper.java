@@ -2,6 +2,8 @@ package com.wis.mapper;
 
 import com.wis.dto.CheckedDateDTO;
 import com.wis.pojo.po.*;
+import com.wis.pojo.vo.GroupInfo;
+import com.wis.pojo.vo.WarningInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -83,7 +85,22 @@ public interface GasApiMapper {
     List<Item> findWarningItem(String sceneId);
 
     //产生告警的数据
-    @Select("select pname,pvalue,unit,pstatus from wis_item_data where s_id=#{sid} and item_id=#{itemId} and pstatus>0")
+    @Select("select pname,pvalue,unit,pstatus,data_name dataName from wis_item_data where s_id=#{sid} and item_id=#{itemId} and pstatus>0")
     List<ItemData> findWarningItemData(Integer sid, Integer itemId);
+
+
+    //查询当前场站分组信息
+    @ResultMap("GroupResultMap")
+    @Select("select * from wis_item_group where scene_id=#{sceneId}")
+    List<Group> findAllGroup(String sceneId);
+
+    //查询当前分组包含的物体信息
+    @Select("select wi.cname ,wi.id,wi.uid from wis_item_group_relation wigr left join wis_item wi on wigr.item_id = wi.id where wigr.group_id = #{id}")
+    List<Item> findGroupById(Integer id);
+
+    //查询当前场站所有告警数据
+    @Select("select wi.id,wi.cname title,wid.pname,wid.data_name name,wi.uid,wid.pvalue,wid.unit,wid.pstatus,wi.wtzt,wi.wtlx,wi.qpzt from wis_item_data wid left join wis_item wi on wid.item_id = wi.id where wid.s_id=#{sid} and wid.pstatus>0;")
+    List<WarningInfo> findWarningDataBySid(Integer sid);
+
 
 }

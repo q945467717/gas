@@ -50,4 +50,10 @@
         select * from wis_item where sid=#{sceneId} and wtlx IN (2,3,4) order by id
     </select>
 
+    <resultMap id="GroupResultMap" type="com.wis.pojo.po.Group">
+        <id column="id" property="id"/>
+        <result column="group_name" property="groupName"/>
+        <result column="scene_id" property="sceneId"/>
+    </resultMap>
+
 </mapper>

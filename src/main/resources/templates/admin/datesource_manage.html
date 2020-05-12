@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="import/head :: head"><title></title></head>
+
+<script>
+    $(document).ready(function () {
+
+        var scene = "";
+
+        $("#result").click(function () {
+
+            var reg = new RegExp("^[0-9]*$");
+            var pid = $('#pid').val();
+            if(!reg.test(pid)){
+                swal({
+                    title: "pid格式错误",
+                    type: "error"
+                });
+                return;
+            }
+
+            var sobj = document.getElementById('selectedScene');
+            var sindex = sobj.selectedIndex;
+            scene = sobj.options[sindex].value;
+
+            $("#table").bootstrapTable('refresh', {
+                url:"/dataSource/list"
+            });
+
+        });
+
+        $("#table").bootstrapTable({
+            pagination: true,   //是否显示分页条
+            pageSize: 15,   //一页显示的行数
+            paginationLoop: false,  //是否开启分页条无限循环，最后一页时点击下一页是否转到第一页
+            pageList: [5,10,15],  //选择每页显示多少行，数据过少时可能会没有效果
+            url:"/dataSource/list",
+            method:"get",
+            sidePagination:'server',
+            queryParams:function (params) {
+                return {
+                    limit: params.limit, // 每页显示数量
+                    offset: params.offset, // SQL语句起始索引
+                    page: (params.offset / params.limit) + 1,   //当前页码
+                    sid:scene,
+                    pid: $('#pid').val(),
+                };
+            },
+
+            columns:[
+                {
+                    checkbox:true
+                },{
+                    title:"SCADA系统名称",
+                    field:"pname",
+                    align:"center"
+                },{
+                    title:"PID",
+                    field:"pid",
+                    align:"center"
+                },{
+                    title:"所属场站",
+                    field:"stationName",
+                    align:"center"
+                },{
+                    title:"可视化系统名称",
+                    field:"dataName",
+                    align:"center"
+                },{
+                    title:"操作",
+                    align:"center",
+                    field:"id",
+                    formatter:function (value) {
+                        return '<a data-toggle="modal" data-target="#updateSourceModal" class="btn btn-sm btn-success" onclick="openModal(\'/dataSource/toUpdateSource\',\'updateSourceModal\','+value+')">设置名称</a>'
+                    }
+                }
+            ]
+        });
+    })
+
+
+</script>
+<body>
+<div class="ibox float-e-margins" >
+    <div class="ibox-title">
+        <h3 style="display: inline;">
+            全部数据源信息
+<!--            <input type="button" id="scene" class="btn btn-danger" data-toggle="modal" data-target="#deleteAllModal" value="批量删除" style="margin-left: 75%;display: inline" onclick="openModal('/toDeleteAll','deleteAllModal',this.id)"/>-->
+<!--            <input type="button" class="btn btn-success" data-toggle="modal" data-target="#addSceneModal" value="新增场景" style="display: inline" onclick="openModal('/scene/toAddScene','addSceneModal')"/>-->
+        </h3>
+    </div>
+    <!--筛选-->
+    <div class="ibox-content">
+        <div style="width: 100%">
+            <table class="table table-striped table-bordered" style="text-align: center" id="selectTable">
+                <tr>
+                    <th colspan="3" style="text-align: center">筛选结果</th>
+                </tr>
+                <tr>
+                    <td style="width: 250px">PID<input type="text" style="margin: 0 0 0 7px" id="pid"></td>
+                    <td style="width: 300px">所属场景<select class="form-control" style="width: 120px;display: inline;padding: 0;margin: 0 0 0 10px" id="selectedScene">
+                        <option value="">全部场景</option>
+                        <option th:value="${sceneInfo.scadaSid}" th:each="sceneInfo:${sceneInfoList}" th:text="${sceneInfo.sceneName}"></option>
+                    </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4"><input  id="result" type="button" class="btn btn-sm btn-info" value="筛选结果"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!--数据展示-->
+    <div class="ibox-content">
+        <div style="width: 100%">
+            <table class="table table-striped table-bordered" style="text-align: center" id="table"></table>
+        </div>
+    </div>
+</div>
+<!--设置uid模态框-->
+<div class="modal fade" id="updateSourceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+
+<script th:replace="import/script :: script"></script>
+</body>
+</html>

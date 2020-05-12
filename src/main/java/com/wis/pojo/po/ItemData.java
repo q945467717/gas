@@ -12,6 +12,15 @@ public class ItemData {
     private int pstatus;
     private String unit;
     private String warning;
+    private String dataName;
+
+    public String getDataName() {
+        return dataName;
+    }
+
+    public void setDataName(String dataName) {
+        this.dataName = dataName;
+    }
 
     public void setPvalue(String pvalue) {
         this.pvalue = pvalue;

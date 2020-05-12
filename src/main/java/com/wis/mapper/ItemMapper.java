@@ -2,10 +2,7 @@ package com.wis.mapper;
 
 import com.wis.pojo.po.Item;
 import com.wis.pojo.po.ItemData;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
@@ -33,6 +30,7 @@ public interface ItemMapper {
     @Update("update wis_item set sid=#{sid},uid=#{uid},wtlx=#{wtlx},cname=#{cname},content=#{content} where id=#{id}")
     void updateItemById(Integer id,String sid,String uid,int wtlx,String cname,String content);
 
+    @ResultMap("ItemDataResuleMap")
     @Select("select * from wis_item_data where item_id=#{itemId}")
     List<ItemData> findDataByItemId(Integer itemId);
 
@@ -42,7 +40,7 @@ public interface ItemMapper {
     @Update("update wis_item_data set item_id=#{itemId} where s_id=#{scadaId} and pid=#{pid} and ptype='A")
     void updateItemData(Integer scadaId,Integer itemId,Integer pid);
 
-    @Select("select uid from wis_item where sid=#{sid} and aid=#{aid}")
+    @Select("select uid,id,wtzt,cname,wtlx from wis_item where sid=#{sid} and aid=#{aid}")
     Item findByAidAndSid(String sid,Integer aid);
 
     @Select("select uid,id,cname from wis_item where sid=#{sid} and wtlx=3")

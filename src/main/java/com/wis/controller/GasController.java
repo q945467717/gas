@@ -118,7 +118,7 @@ public class GasController {
      */
     @ApiOperation("相机实时画面页面")
     @PostMapping("/getCameraInfo")
-    public Result getCameraInfo(HttpServletResponse response, String sceneId, String uid){
+    public Result getCameraInfo(HttpServletResponse response, String sceneId, @RequestParam("uids[]") String[] uid){
 
         try {
             gasApiService.getCameraInfo(sceneId,uid);
@@ -132,17 +132,17 @@ public class GasController {
     }
 
     @ApiOperation("获取资产信息")
-    @PostMapping("/getEquipmentInfo")
-    public Result getEquipmentInfo(HttpServletResponse response, String sceneId,String text){
+    @GetMapping("/getEquipmentInfo")
+    public Result getEquipmentInfo(HttpServletResponse response, String sceneId,@RequestParam("groupId[]") Integer[] groupId){
 
         try {
-            gasApiService.getEquipmentInfo(sceneId,text);
+            gasApiService.getEquipmentInfo(sceneId,groupId);
         }catch (Exception e){
             e.printStackTrace();
             return ResultUtil.error(0,e.getMessage());
         }
 
-        return ResultUtil.success(response.getStatus(),gasApiService.getEquipmentInfo(sceneId,text));
+        return ResultUtil.success(response.getStatus(),gasApiService.getEquipmentInfo(sceneId,groupId));
 
     }
 
@@ -230,5 +230,38 @@ public class GasController {
         return new ApiResult(ResponseCode.SUCCESS,gasApiService.getSceneId(id));
 
     }
+
+    @ApiOperation("获取物体列表")
+    @GetMapping("/item/{id}")
+    public ApiResult getItemInfo(@PathVariable("id")Integer id){
+
+        return new ApiResult(ResponseCode.SUCCESS,gasApiService.getItemInfo(id));
+
+    }
+
+    @ApiOperation("获取告警列表")
+    @GetMapping("/warnings")
+    public ApiResult getWarning(){
+
+        return new ApiResult(ResponseCode.SUCCESS,null);
+
+    }
+
+    @ApiOperation("获取资产列表")
+    @GetMapping("{sceneId}/assets")
+    public ApiResult getAssets(@PathVariable("sceneId")String sceneId){
+
+        return new ApiResult(ResponseCode.SUCCESS,gasApiService.showAssets(sceneId));
+
+    }
+
+    @ApiOperation("获取分组信息")
+    @GetMapping("{sceneId}/groups")
+    public ApiResult getGroup(@PathVariable("sceneId")String sceneId){
+
+        return new ApiResult(ResponseCode.SUCCESS,gasApiService.showGroup(sceneId));
+
+    }
+
 
 }

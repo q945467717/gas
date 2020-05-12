@@ -72,9 +72,9 @@
                     align:"center",
                     field:"id",
                     formatter:function (value) {
-                        return '<a data-toggle="modal" data-target="#checkDataSourceModal" class="btn btn-sm btn-info" onclick="openModal(\'/item/toCheckData\',\'checkDataSourceModal\','+value+')">数据源</a>'+
-                            '<a data-toggle="modal" data-target="#updateItemModal" class="btn btn-sm btn-warning" onclick="openModal(\'/item/toUpdateItem\',\'updateItemModal\','+value+')">修改</a>'+
-                            '<a data-toggle="modal" data-target="#deleteItemModal" class="btn btn-sm btn-danger" onclick="openModal(\'/item/toDeleteItem\',\'deleteItemModal\','+value+')">删除</a>'
+                        // return '<a data-toggle="modal" data-target="#checkDataSourceModal" class="btn btn-sm btn-info" onclick="openModal(\'/item/toCheckData\',\'checkDataSourceModal\','+value+')">数据源</a>'+
+                         return '<a data-toggle="modal" data-target="#updateItemModal" class="btn btn-sm btn-warning" onclick="openModal(\'/item/toUpdateItem\',\'updateItemModal\','+value+')">修改</a>'+
+                             '<a data-toggle="modal" data-target="#deleteItemModal" class="btn btn-sm btn-danger" onclick="openModal(\'/item/toDeleteItem\',\'deleteItemModal\','+value+')">删除</a>'
                     }
                 }
             ]

@@ -1,13 +1,12 @@
 package com.wis.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wis.dto.CheckedDateDTO;
-import com.wis.mapper.GasApiMapper;
+import com.wis.mapper.*;
 import com.wis.pojo.po.*;
-import com.wis.pojo.vo.EquipmentInfo;
-import com.wis.pojo.vo.ItemInfo;
+import com.wis.pojo.vo.*;
 import com.wis.service.GasApiService;
+import com.wis.utils.CheckDataStatusUtil;
 import com.wis.utils.RedisUtil;
 import com.wis.webservice.PValueDTO;
 import com.wis.webservice.ScadaDataService;
@@ -27,12 +26,21 @@ public class GasApiServiceImpl implements GasApiService {
     @Autowired
     private GasApiMapper gasApiMapper;
     @Autowired
+    private ItemMapper itemMapper;
+    @Autowired
+    private AssetsMapper assetsMapper;
+    @Autowired
+    private CheckMapper checkMapper;
+    @Autowired
+    private SceneMapper sceneMapper;
+    @Autowired
     private RedisUtil redisUtil;
 
     @Override
     public List<Map> getItemTable(String sceneId) {
 
         Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
+
         List<Item> itemList = gasApiMapper.findItemBySid(sceneId);
 
         List<Map> mapList = new ArrayList<>();
@@ -42,6 +50,7 @@ public class GasApiServiceImpl implements GasApiService {
 
             Map<String, Object> map = new HashMap<>();
 
+            map.put("id", item.getId());
             map.put("uid", item.getUid());
             map.put("wtlx", item.getWtlx());
             map.put("cname", item.getCname());
@@ -70,63 +79,91 @@ public class GasApiServiceImpl implements GasApiService {
 
     }
 
-    @Override
-    public List<Map> getItemYSBH(String sceneId) {
-
-//        if (redisUtil.hasKey("item:status:"+sceneId)) {
+//    @Override
+//    public List<Map> getItemYSBH(String sceneId) {
 //
-//            List<Object> objects = redisUtil.lGet("item:status:"+sceneId, 0, -1);
+////        if (redisUtil.hasKey("item:status:"+sceneId)) {
+////
+////            List<Object> objects = redisUtil.lGet("item:status:"+sceneId, 0, -1);
+////
+////            List<Map> mapList = new ArrayList<>();
+////            for(Object object:objects){
+////
+////                String s = JSON.toJSONString(object);
+////                Map map = JSONObject.parseObject(s, Map.class);
+////
+////                mapList.add(map);
+////
+////            }
+////
+////            return mapList;
+////
+////        }
 //
-//            List<Map> mapList = new ArrayList<>();
-//            for(Object object:objects){
+//        List<Item> itemList = gasApiMapper.findWarningItem(sceneId);
 //
-//                String s = JSON.toJSONString(object);
-//                Map map = JSONObject.parseObject(s, Map.class);
+//        Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
 //
-//                mapList.add(map);
+//        List<Map> mapList = new ArrayList<>();
 //
-//            }
+//        for (Item item : itemList) {
 //
-//            return mapList;
+//            //Assets assets = gasApiMapper.findByAid(item.getAid(), scene.getScadaSid());
 //
+//            List<ItemData> warningItemData = gasApiMapper.findWarningItemData(scene.getScadaSid(), item.getId());
+//
+//            Map<String, Object> map = new HashMap<>();
+//
+//            map.put("uid", item.getUid());
+//            map.put("wtlx", item.getWtlx());
+//            map.put("wtzt", item.getWtzt());
+////            if (assets != null) {
+////                map.put("assetsName", assets.getAssetsName());
+////            } else {
+////                map.put("assetsName", 0);
+////            }
+//            map.put("cname", item.getCname());
+//
+//            map.put("warningData", warningItemData);
+//
+//
+//            mapList.add(map);
+//
+//            //   redisUtil.lSet("item:status:"+sceneId,map,100);
 //        }
+//
+//        //redisUtil.lSet("item:status", mapList);
+//
+//        return mapList;
+//    }
+@Override
+public List<WarningInfo> getItemYSBH(String sceneId) {
 
-        List<Item> itemList = gasApiMapper.findWarningItem(sceneId);
+    Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
+    List<WarningInfo> warningInfoList = gasApiMapper.findWarningDataBySid(scene.getScadaSid());
 
-        Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
-
-        List<Map> mapList = new ArrayList<>();
-
-        for (Item item : itemList) {
-
-            Assets assets = gasApiMapper.findByAid(item.getAid(), scene.getScadaSid());
-
-            List<ItemData> warningItemData = gasApiMapper.findWarningItemData(scene.getScadaSid(), item.getId());
-
-            Map<String, Object> map = new HashMap<>();
-
-            map.put("uid", item.getUid());
-            map.put("wtlx", item.getWtlx());
-            map.put("wtzt", item.getWtzt());
-            if (assets != null) {
-                map.put("assetsName", assets.getAssetsName());
-            } else {
-                map.put("assetsName", 0);
-            }
-            map.put("cname", item.getCname());
-
-            map.put("warningData", warningItemData);
+    List<WarningInfo> bigWarningInfoList = new ArrayList<>();
+    List<WarningInfo> smallWarningInfoList = new ArrayList<>();
 
 
-            mapList.add(map);
-
-            //   redisUtil.lSet("item:status:"+sceneId,map,100);
+    for(WarningInfo warningInfo:warningInfoList){
+        if(warningInfo.getPstatus()==1||warningInfo.getPstatus()==4){
+            bigWarningInfoList.add(warningInfo);
+        }
+        if(warningInfo.getPstatus()==2||warningInfo.getPstatus()==3){
+            smallWarningInfoList.add(warningInfo);
         }
 
-        //redisUtil.lSet("item:status", mapList);
-
-        return mapList;
     }
+
+    List<WarningInfo> warningInfos = new ArrayList<>();
+    warningInfos.addAll(bigWarningInfoList);
+    warningInfos.addAll(smallWarningInfoList);
+
+
+    return warningInfos;
+
+}
 
     @Override
     public String getPinfo(String sceneId) {
@@ -190,29 +227,71 @@ public class GasApiServiceImpl implements GasApiService {
 
     }
 
+//    @Override
+//    public StringBuffer getCameraInfo(String sceneId, String uid) {
+//
+//        Item item = gasApiMapper.findItemBySidAndUid(sceneId, uid);
+//
+//        StringBuffer html = new StringBuffer();
+//
+//        if ("rtsp".equals(item.getContent().substring(0, 4))) {
+//            String s = "<h1><em id=\"opencamera_name\">" + item.getCname() + "</em><span onclick=\"close_camera('" + item.getUid() + "')\">+</span></h1>" +
+//                    "<object type=\"application/x-vlc-plugin\" id=\"vlc\" events=\"True\" width=\"400\" height=\"400\">" +
+//                    "<param name=\"mrl\" value=\"" + item.getContent() + "\" />" +
+//                    "<param name=\"volume\" value=\"50\" />" +
+//                    "<param name=\"autoplay\" value=\"true\" />" +
+//                    "<param name=\"loop\" value=\"false\" />" +
+//                    "<param name=\"fullscreen\" value=\"false\"/>" +
+//                    "</object>";
+//            html.append(s);
+//        } else {
+//            String s = "<h1><em id=\"opencamera_name\">" + item.getCname() + "</em><span onclick=\"close_camera('cam1')\">+</span></h1><p>该位置未录入可支持RTSP数据源</p>";
+//            html.append(s);
+//        }
+//
+//        return html;
+//
+//    }
+
     @Override
-    public StringBuffer getCameraInfo(String sceneId, String uid) {
+    public List<CameraInfo> getCameraInfo(String sceneId, String[] uids) {
 
-        Item item = gasApiMapper.findItemBySidAndUid(sceneId, uid);
+        List<CameraInfo> cameraInfoList = new ArrayList<>();
 
-        StringBuffer html = new StringBuffer();
+        for(String uid: uids){
+            Item item = gasApiMapper.findItemBySidAndUid(sceneId, uid);
+            CameraInfo cameraInfo = new CameraInfo(){{
+                setCname(item.getCname());
+                setContent(item.getContent());
+                setId(item.getId());
+                setUid(item.getUid());
+            }};
 
-        if ("rtsp".equals(item.getContent().substring(0, 4))) {
-            String s = "<h1><em id=\"opencamera_name\">" + item.getCname() + "</em><span onclick=\"close_camera('" + item.getUid() + "')\">+</span></h1>" +
-                    "<object type=\"application/x-vlc-plugin\" id=\"vlc\" events=\"True\" width=\"400\" height=\"400\">" +
-                    "<param name=\"mrl\" value=\"" + item.getContent() + "\" />" +
-                    "<param name=\"volume\" value=\"50\" />" +
-                    "<param name=\"autoplay\" value=\"true\" />" +
-                    "<param name=\"loop\" value=\"false\" />" +
-                    "<param name=\"fullscreen\" value=\"false\"/>" +
-                    "</object>";
-            html.append(s);
-        } else {
-            String s = "<h1><em id=\"opencamera_name\">" + item.getCname() + "</em><span onclick=\"close_camera('cam1')\">+</span></h1><p>该位置未录入可支持RTSP数据源</p>";
-            html.append(s);
+            cameraInfoList.add(cameraInfo);
         }
 
-        return html;
+
+
+       // Item item = gasApiMapper.findItemBySidAndUid(sceneId, uid);
+
+//        StringBuffer html = new StringBuffer();
+//
+//        if ("rtsp".equals(item.getContent().substring(0, 4))) {
+//            String s = "<h1><em id=\"opencamera_name\">" + item.getCname() + "</em><span onclick=\"close_camera('" + item.getUid() + "')\">+</span></h1>" +
+//                    "<object type=\"application/x-vlc-plugin\" id=\"vlc\" events=\"True\" width=\"400\" height=\"400\">" +
+//                    "<param name=\"mrl\" value=\"" + item.getContent() + "\" />" +
+//                    "<param name=\"volume\" value=\"50\" />" +
+//                    "<param name=\"autoplay\" value=\"true\" />" +
+//                    "<param name=\"loop\" value=\"false\" />" +
+//                    "<param name=\"fullscreen\" value=\"false\"/>" +
+//                    "</object>";
+//            html.append(s);
+//        } else {
+//            String s = "<h1><em id=\"opencamera_name\">" + item.getCname() + "</em><span onclick=\"close_camera('cam1')\">+</span></h1><p>该位置未录入可支持RTSP数据源</p>";
+//            html.append(s);
+//        }
+
+        return cameraInfoList;
 
     }
 
@@ -267,68 +346,111 @@ public class GasApiServiceImpl implements GasApiService {
 //        List<Pvalues> pvalues = stationDataBySid.getPvalues();
 
         for (PValueDTO pValueDTO : pvalues) {
+            //判断数据库是否有该条数据
             ItemData itemData = gasApiMapper.findDataByScadaSidAndPid(scene.getScadaSid(), (int) pValueDTO.getPid(), pValueDTO.getPtype());
-            if (itemData != null) {
+            if (itemData != null) {         //有该条数据则更新该条数据
                 gasApiMapper.updateData(scene.getScadaSid(), pValueDTO.getPvalue(), itemData.getPid(), pValueDTO.getPtype());
-            } else {
-                ItemData itemData1 = new ItemData();
-                itemData1.setScadaSid(scene.getScadaSid());
-                itemData1.setPid((int) pValueDTO.getPid());
-                itemData1.setPname(pValueDTO.getPname());
-                itemData1.setPtype(pValueDTO.getPtype());
-                itemData1.setPvalue(pValueDTO.getPvalue());
-                itemData1.setPstatus(0);
-                itemData1.setUnit(pValueDTO.getUnit());
+            } else {                        //否则插入数据
+                ItemData itemData1 = new ItemData() {{
+                    setScadaSid(scene.getScadaSid());
+                    setPid((int) pValueDTO.getPid());
+                    setPname(pValueDTO.getPname());
+                    setPtype(pValueDTO.getPtype());
+                    setPvalue(pValueDTO.getPvalue());
+                    setPstatus(0);
+                    setUnit(pValueDTO.getUnit());
+                }};
 
                 gasApiMapper.addData(itemData1);
             }
 
         }
 
+        //更新整体场站信息
         gasApiMapper.updateSceneDate(stationDataBySid.getStatName(), stationDataBySid.getStatus(), stationDataBySid.getTimeCreated(), scene.getId());
     }
 
-    @Override
-    public List<EquipmentInfo> getEquipmentInfo(String sceneId, String text) {
+//    @Override
+//    public List<EquipmentInfo> getEquipmentInfo(String sceneId, String text) {
+//
+//        System.out.println(text);
+//
+//        List<Item> itemList = gasApiMapper.findItemBySidAndLx(sceneId);
+//
+//        List<EquipmentInfo> itemInfoList = new ArrayList<>();
+//
+//        for (Item item : itemList) {
+//
+//            Scene scene = gasApiMapper.findSceneBySceneId(item.getSid());
+//
+//            Assets assets = gasApiMapper.findByAid(item.getAid(), scene.getScadaSid());
+//
+//            if (assets != null) {
+//                if( assets.getAssetsName().contains(text)){
+//                    EquipmentInfo equipmentInfo = new EquipmentInfo();
+//                    equipmentInfo.setId(item.getId());
+//                    equipmentInfo.setAssets(assets);
+//                    equipmentInfo.setCheckedDataList(gasApiMapper.findCheckDataByAid(item.getAid(), scene.getScadaSid()));
+//                    equipmentInfo.setUid(item.getUid());
+//                    equipmentInfo.setItemName(item.getCname());
+//                    equipmentInfo.setStatus(item.getWtzt());
+//
+//                    itemInfoList.add(equipmentInfo);
+//                }
+//            }else {
+//                if(item.getCname().contains(text)){
+//                    EquipmentInfo equipmentInfo = new EquipmentInfo();
+//                    equipmentInfo.setId(item.getId());
+//                    equipmentInfo.setCheckedDataList(gasApiMapper.findCheckDataByAid(item.getAid(), scene.getScadaSid()));
+//                    equipmentInfo.setUid(item.getUid());
+//                    equipmentInfo.setItemName(item.getCname());
+//                    equipmentInfo.setStatus(item.getWtzt());
+//
+//
+//                    itemInfoList.add(equipmentInfo);
+//                }
+//            }
+//        }
+//        return itemInfoList;
+//    }
 
-        System.out.println(text);
+    @Override
+    public List<Item> getEquipmentInfo(String sceneId, Integer[] groupId) {
 
         List<Item> itemList = gasApiMapper.findItemBySidAndLx(sceneId);
 
-        List<EquipmentInfo> itemInfoList = new ArrayList<>();
+        if(groupId.length>0){
 
-        for (Item item : itemList) {
+//            Map<Integer, Item> itemMap = itemList.stream().collect(
+//                    Collectors.toMap(Item::getId, i -> i)
+//            );
+//
+//            List<Item> groupItemList = list.stream().map(itemMap::get
+//            ).collect(Collectors.toList());
+            List<Item> groups = new ArrayList<>();
+            for(Integer id: groupId){
+                List<Item> groupList = gasApiMapper.findGroupById(id);
+                groups.addAll(groupList);
 
-            Scene scene = gasApiMapper.findSceneBySceneId(item.getSid());
-
-            Assets assets = gasApiMapper.findByAid(item.getAid(), scene.getScadaSid());
-
-            if (assets != null) {
-                if( assets.getAssetsName().contains(text)){
-                    EquipmentInfo equipmentInfo = new EquipmentInfo();
-                    equipmentInfo.setAssets(assets);
-                    equipmentInfo.setCheckedDataList(gasApiMapper.findCheckDataByAid(item.getAid(), scene.getScadaSid()));
-                    equipmentInfo.setUid(item.getUid());
-                    equipmentInfo.setItemName(item.getCname());
-                    equipmentInfo.setStatus(item.getWtzt());
-
-                    itemInfoList.add(equipmentInfo);
-                }
-            }else {
-                if(item.getCname().contains(text)){
-                    EquipmentInfo equipmentInfo = new EquipmentInfo();
-                    equipmentInfo.setCheckedDataList(gasApiMapper.findCheckDataByAid(item.getAid(), scene.getScadaSid()));
-                    equipmentInfo.setUid(item.getUid());
-                    equipmentInfo.setItemName(item.getCname());
-                    equipmentInfo.setStatus(item.getWtzt());
-
-
-                    itemInfoList.add(equipmentInfo);
-                }
             }
+
+            return groups;
+
+        }else {
+            return itemList;
         }
-        return itemInfoList;
     }
+
+//@Override
+//public List<Assets> getEquipmentInfo(String sceneId, String text) {
+//
+//    Scene scene = sceneMapper.findSceneById(sceneId);
+//
+//    assetsMapper.findBySid(scene.getScadaSid());
+//
+//    return assetsMapper.findBySid(scene.getScadaSid());
+//
+//}
 
     @Override
     public String getElectricity(String sceneId) {
@@ -373,5 +495,105 @@ public class GasApiServiceImpl implements GasApiService {
         }
 
         return null;
+    }
+
+    @Override
+    public ItemPanelInfo getItemInfo(Integer id) {
+        Item item = itemMapper.findItemById(id);
+
+        if (item != null) {
+            return new ItemPanelInfo() {{
+                setAssets(assetsMapper.findByAid(item.getAid()));
+                setItemDataInfoList(itemMapper.findDataByItemId(item.getId()));
+
+                //查询物体所在场景
+                Scene scene = sceneMapper.findSceneById(item.getSid());
+                if (scene != null) {
+                    LinkedList<CheckedData> checkedDataList = checkMapper.findShowCheckedData(item.getAid(), scene.getScadaSid());
+                    List<CheckInfo> checkInfoList = new ArrayList<>();
+
+                    if (checkedDataList.size() > 0) {
+                        for (CheckedData checkedData : checkedDataList) {
+                            CheckInfo checkInfo = new CheckInfo() {{
+                                setCheckMember(checkedData.getCheckMember());
+                                setStatus(CheckDataStatusUtil.statusVo(checkedData.getStatus()));
+                                setCheckTime(checkedData.getCheckTime());
+                            }};
+
+                            checkInfoList.add(checkInfo);
+                        }
+                    }
+
+                    //设置巡检数据list
+                    setCheckInfoList(checkInfoList);
+                    setSceneName(scene.getScadaName());
+                    setStatus(item.getWtzt());
+                    setItemName(item.getCname());
+
+                }
+            }};
+
+        }
+
+        return null;
+    }
+
+    @Override
+    public void getWarning() {
+
+    }
+
+    @Override
+    public List<AssetsNavInfo> showAssets(String sceneId) {
+
+        Scene scene = sceneMapper.findSceneById(sceneId);
+
+        List<Assets> assetsList = assetsMapper.findBySid(scene.getScadaSid());
+
+        List<AssetsNavInfo> assetsNavInfoList = new ArrayList<>();
+
+        for (Assets assets : assetsList) {
+
+            Item item = itemMapper.findByAidAndSid(scene.getSceneId(), assets.getAid());
+
+            if (item != null) {
+                AssetsNavInfo assetsNavInfo = new AssetsNavInfo() {{
+                    setAssetsName(item.getCname());
+                    setItemId(item.getId());
+                    setStatus(item.getWtzt());
+                    setUid(item.getUid());
+                    setType(item.getWtlx());
+
+                }};
+
+                assetsNavInfoList.add(assetsNavInfo);
+            }
+
+        }
+
+
+        return assetsNavInfoList;
+    }
+
+    @Override
+    public List<GroupInfo> showGroup(String sceneId) {
+
+        List<Group> groups = gasApiMapper.findAllGroup(sceneId);
+
+        List<GroupInfo> groupInfoList = new ArrayList<>();
+
+        for(Group group:groups){
+
+            GroupInfo groupInfo = new GroupInfo(){{
+                setGroupName(group.getGroupName());
+                setId(group.getId());
+            }};
+
+            groupInfoList.add(groupInfo);
+
+        }
+
+        return groupInfoList;
+
     }
 }

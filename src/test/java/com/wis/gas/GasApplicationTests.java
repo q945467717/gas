@@ -18,10 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -33,7 +30,6 @@ public class GasApplicationTests {
     private ItemMapper itemMapper;
     @Autowired
     private GasApiMapper gasApiMapper;
-
 
     @Test
     public void contextLoads() {
@@ -350,6 +346,25 @@ public class GasApplicationTests {
 
 
         System.out.println(list);
+    }
+
+
+    @Test
+    public void test111() {
+
+
+        List<String> list = new LinkedList<>();
+
+        long start = System.currentTimeMillis();
+
+        for(int i = 0;i<1000000;i++){
+            list.add("11");
+        }
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("用时"+(end-start));
+
     }
 
 }
