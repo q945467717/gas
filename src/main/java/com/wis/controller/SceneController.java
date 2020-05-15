@@ -147,7 +147,7 @@ public class SceneController {
 
         Scene scene = sceneMapper.findByMomodaId(sceneInfo.getMomodaId());
 
-        if(scene!=null){
+        if(scene==null){
             throw new UpdateSceneException();
         }
 

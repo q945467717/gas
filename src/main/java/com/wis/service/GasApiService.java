@@ -1,6 +1,7 @@
 package com.wis.service;
 
 import com.wis.dto.CheckedDateDTO;
+import com.wis.exception.SceneNotFindException;
 import com.wis.pojo.po.Item;
 import com.wis.pojo.vo.*;
 
@@ -40,7 +41,7 @@ public interface GasApiService {
     //根据id获取场景id
     String getSceneId(String id);
 
-    ItemPanelInfo getItemInfo(Integer id);
+    ItemPanelInfo getItemInfo(Integer id) throws SceneNotFindException;
 
     void getWarning();
 

@@ -15,7 +15,8 @@ public interface CheckMapper {
 
 
     @ResultMap("checkedResultMap")
-    @Select("select * from wis_item_checked where check_item_aid=#{aid} and check_item_sid = #{sid} group by check_time desc limit 4 ")
+    @Select("select * from wis_item_checked where check_item_aid=#{aid} and check_item_sid = #{sid} limit 4")
+//    @Select("select * from wis_item_checked where check_item_aid=#{aid} and check_item_sid = #{sid} group by check_time desc limit 4")
     LinkedList<CheckedData> findShowCheckedData(Integer aid, Integer sid);
 
 }

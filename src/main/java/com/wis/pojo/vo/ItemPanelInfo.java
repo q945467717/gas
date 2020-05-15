@@ -21,4 +21,6 @@ public class ItemPanelInfo {
 
     private String itemName;
 
+    private String uid;
+
 }

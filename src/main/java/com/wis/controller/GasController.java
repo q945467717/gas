@@ -1,5 +1,6 @@
 package com.wis.controller;
 
+import com.wis.exception.SceneNotFindException;
 import com.wis.mapper.SceneMapper;
 import com.wis.pojo.po.Scene;
 import com.wis.pojo.vo.ApiResult;
@@ -233,7 +234,7 @@ public class GasController {
 
     @ApiOperation("获取物体列表")
     @GetMapping("/item/{id}")
-    public ApiResult getItemInfo(@PathVariable("id")Integer id){
+    public ApiResult getItemInfo(@PathVariable("id")Integer id) throws SceneNotFindException {
 
         return new ApiResult(ResponseCode.SUCCESS,gasApiService.getItemInfo(id));
 

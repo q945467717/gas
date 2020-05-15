@@ -228,10 +228,10 @@ public class MainController {
      */
     @ResponseBody
     @RequestMapping("/admin/deleteAll")
-    public String deleteAll(@RequestParam("checks[]") int[] checks,String typeName){
+    public ApiResult deleteAll(@RequestParam("checks[]") int[] checks,String typeName){
 
         mainService.deleteAll(checks,typeName);
-        return "删除成功";
+        return new ApiResult(ResponseCode.SUCCESS,"删除成功");
     }
     //去修改密码模态框
     @RequestMapping("/admin/toChangePassword")

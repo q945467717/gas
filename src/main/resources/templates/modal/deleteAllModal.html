@@ -32,17 +32,15 @@
                 checks.push(this.id);// cid为获得到的整条数据中的一列
             });
 
-            console.log(checks);
-
                 $.ajax({
                     // contentType: 'application/json;charset=UTF-8',
                     url: "/admin/deleteAll",
                     data: {'checks': checks,"typeName":id},
                     type: "POST",
-                    dataType: "text",
+                    dataType: "JSON",
                     success: function (data) {
                         swal({
-                            title: data,
+                            title: data.data,
                             type: "success"
                         },function(){
                             $('#deleteAllModal').modal('hide');

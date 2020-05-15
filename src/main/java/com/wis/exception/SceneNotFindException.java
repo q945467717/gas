@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 public class SceneNotFindException extends Exception{
 
     private ResponseCode code;
+    private String msg;
 
     public SceneNotFindException(ResponseCode code) {
         this.code = code;
@@ -20,5 +21,11 @@ public class SceneNotFindException extends Exception{
     }
 
     public SceneNotFindException(){}
+
+    public SceneNotFindException(String msg){
+
+        this.msg = msg;
+    }
+
 
 }

@@ -352,19 +352,31 @@ public class GasApplicationTests {
     @Test
     public void test111() {
 
+        List<Integer> list1 = new ArrayList<>();
 
-        List<String> list = new LinkedList<>();
+        for(int i=0;i<10;i++){
+            list1.add(i);
 
-        long start = System.currentTimeMillis();
+        }
+        List<Integer> list2 = new ArrayList<>();
 
-        for(int i = 0;i<1000000;i++){
-            list.add("11");
+        for(int i=0;i<5;i++){
+            list2.add(i);
+
         }
 
-        long end = System.currentTimeMillis();
+        for (int value : list1) {
+            for (int ints : list2) {
+                if (value == ints) {
+                    System.out.println(value);
+                }
+            }
+        }
 
-        System.out.println("用时"+(end-start));
+
 
     }
+
+
 
 }

@@ -2,6 +2,7 @@ package com.wis.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wis.dto.CheckedDateDTO;
+import com.wis.exception.SceneNotFindException;
 import com.wis.mapper.*;
 import com.wis.pojo.po.*;
 import com.wis.pojo.vo.*;
@@ -174,10 +175,10 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
             StringBuilder html = new StringBuilder();
 
             if (!"正常".equals(scene.getSceneStatus())) {
-                String s = "<color=white><size=20>" + scene.getScadaName() + "</size> ；" + date + "</color><color=red>；" + scene.getSceneStatus() + "</color>；";
+                String s = "<color=white><size=20>" + scene.getSceneName() + "</size> ；" + date + "</color><color=red>；" + scene.getSceneStatus() + "</color>；";
                 html.append(s);
             } else {
-                String s = "<color=white><size=20>" + scene.getScadaName() + "</size> ；" + date + "；</color><color=green><size=18>" + scene.getSceneStatus() + "</size></color>；";
+                String s = "<color=white><size=20>" + scene.getSceneName() + "</size> ；" + date + "；</color><color=green><size=18>" + scene.getSceneStatus() + "</size></color>；";
                 html.append(s);
             }
             if ("20180926134038328363371".equals(scene.getSceneId())) {
@@ -498,7 +499,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
     }
 
     @Override
-    public ItemPanelInfo getItemInfo(Integer id) {
+    public ItemPanelInfo getItemInfo(Integer id) throws SceneNotFindException {
         Item item = itemMapper.findItemById(id);
 
         if (item != null) {
@@ -529,7 +530,10 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
                     setSceneName(scene.getScadaName());
                     setStatus(item.getWtzt());
                     setItemName(item.getCname());
+                    setUid(item.getUid());
 
+                }else {
+                    throw new SceneNotFindException("场景信息异常");
                 }
             }};
 
