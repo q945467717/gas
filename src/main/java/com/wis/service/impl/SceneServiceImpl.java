@@ -33,10 +33,10 @@ public class SceneServiceImpl implements SceneService {
 
         List<SceneInfo> sceneInfoList = new ArrayList<SceneInfo>();
 
-
+        SceneInfo sceneInfo;
         for (Scene scene : allScene) {
 
-            SceneInfo sceneInfo = new SceneInfo();
+            sceneInfo = new SceneInfo();
             sceneInfo.setId(scene.getId());
             sceneInfo.setScadaSid(scene.getScadaSid());
             sceneInfo.setSceneId(scene.getSceneId());

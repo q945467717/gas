@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SceneNotFindException extends Exception{
+public class SceneNotFindException extends RuntimeException{
 
     private ResponseCode code;
     private String msg;

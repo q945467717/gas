@@ -1,0 +1,54 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<div class="modal-dialog" style="width: 300px">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">日志详情</h4>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+<!--            <button th:id="${id}" type="button" class="btn btn-primary" onclick="deleteAll(this.id)" >确定</button>-->
+        </div>
+    </div>
+</div>
+</html>
+
+<script>
+    function deleteAll(id) {
+
+        var rows = $("#table").bootstrapTable('getSelections');// 获得要删除的数据
+        if (rows.length === 0) {// rows 主要是为了判断是否选中，下面的else内容才是主要
+            swal({
+                title: "未选择物体",
+                type: "error"
+            },function () {
+                $('#deleteAllModal').modal('hide');
+            })
+
+        } else {
+            var checks = [];// 声明一个数组
+            $(rows).each(function() {// 通过获得别选中的来进行遍历
+                checks.push(this.id);// cid为获得到的整条数据中的一列
+            });
+
+                $.ajax({
+                    // contentType: 'application/json;charset=UTF-8',
+                    url: "/admin/deleteAll",
+                    data: {'checks': checks,"typeName":id},
+                    type: "POST",
+                    dataType: "JSON",
+                    success: function (data) {
+                        swal({
+                            title: data.data,
+                            type: "success"
+                        },function(){
+                            $('#deleteAllModal').modal('hide');
+                            window.location.reload();
+                        });
+                    }
+                })
+        }
+
+    }
+</script>

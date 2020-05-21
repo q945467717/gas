@@ -20,4 +20,16 @@ public class ApiResult implements Serializable {
         this.data = data;
     }
 
+    public ApiResult(Integer code,String msg) {
+        this.code = code;
+        this.msg = msg;
+        this.data = null;
+    }
+
+    public ApiResult(ResponseCode responseCode) {
+        this.code = responseCode.getCode();
+        this.msg = responseCode.getMsg();
+        this.data = null;
+    }
+
 }

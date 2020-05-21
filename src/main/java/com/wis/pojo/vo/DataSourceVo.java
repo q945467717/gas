@@ -6,10 +6,11 @@ import lombok.Data;
 public class DataSourceVo {
 
     private Integer id;
-    private String Pname;
+    private String pname;
     private Integer pid;
     private String dataName;
     private String stationName;
+    private String uid;
 
 
 

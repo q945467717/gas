@@ -19,10 +19,9 @@
                     <option th:text="${itemInfo.itemType}" selected="selected">请选择物体类型</option>
                     <option th:if="${itemInfo.itemType}!='办公大楼'">办公大楼</option>
                     <option th:if="${itemInfo.itemType}!='摄像头'">摄像头</option>
-                    <option th:if="${itemInfo.itemType}!='信息牌类'">信息牌类</option>
-                    <option th:if="${itemInfo.itemType}!='阀门'">阀门</option>
-                    <option th:if="${itemInfo.itemType}!='地面'">地面</option>
-                    <option th:if="${itemInfo.itemType}!='管线'">管线</option>
+                    <option th:if="${itemInfo.itemType}!='流量计'">流量计</option>
+                    <option th:if="${itemInfo.itemType}!='压力变送器'">压力变送器</option>
+                    <option th:if="${itemInfo.itemType}!='其他'">其他</option>
                 </select>
             </div>
         </div>

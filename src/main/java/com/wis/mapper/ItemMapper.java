@@ -52,6 +52,9 @@ public interface ItemMapper {
     @Update("update wis_item set aid=#{aid} where sid=#{sceneId} and uid=#{uid}")
     void updateAid(Integer aid,String sceneId,String uid);
 
+    @Select("select * from wis_item where uid = #{uid}")
+    Item findByUid(String uid);
+
 
 
 }

@@ -51,19 +51,21 @@ public class AssetsServiceImpl implements AssetsService {
         //封装筛选过后的数据
         List<AssetsInfo> assetsInfoList = new ArrayList<>();
 
+        AssetsInfo assetsInfo;
         for(Assets assets:assetsList){
 
-            AssetsInfo assetsInfo = new AssetsInfo();
+            assetsInfo = new AssetsInfo();
             assetsInfo.setAssetsName(assets.getAssetsName());
             assetsInfo.setAssetsManufacturer(assets.getAssetsManufacturer());
             assetsInfo.setAssetsTime(assets.getAssetsTime());
             assetsInfo.setAid(assets.getAid());
             assetsInfo.setId(assets.getId());
 
+            //查询资产设备所属场景
             Scene scene = sceneMapper.findBySid(assets.getAssetsSid());
             assetsInfo.setSceneName(scene.getScadaName());
 
-
+            //查询该资产是否绑定场景设备
             Item item = itemMapper.findByAidAndSid(scene.getSceneId(), assets.getAid());
 
             if(item!=null){

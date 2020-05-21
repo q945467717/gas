@@ -8,10 +8,8 @@ import com.wis.utils.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -49,6 +47,7 @@ public class AssetsController {
 
         //根据资产ID查询资产信息
         AssetsInfo assetsInfo = assetsService.assets(id);
+
         //根据资产sid查询所属场景
         SceneInfo sceneInfo = sceneService.getScene(assetsInfo.getSid());
         //根据场景sid查询该场景所有设备
@@ -69,9 +68,9 @@ public class AssetsController {
     }
 
     //更新资产信息
-    @PostMapping("/updateAssets")
+    @PostMapping("/{id}")
     @ResponseBody
-    public ApiResult updateAssets(Integer id, String uid) throws Exception {
+    public ApiResult updateAssets(@PathVariable("id") Integer id, String uid) throws Exception {
 
         assetsService.updateAssets(id, uid);
 

@@ -2,6 +2,7 @@ package com.wis.gas;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ctc.wstx.util.DataUtil;
 import com.wis.mapper.GasApiMapper;
 import com.wis.mapper.ItemMapper;
 import com.wis.mapper.SceneMapper;
@@ -10,6 +11,8 @@ import com.wis.utils.WebServiceUtil;
 import io.swagger.models.auth.In;
 import lombok.SneakyThrows;
 import okhttp3.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.cxf.endpoint.Client;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -351,28 +354,6 @@ public class GasApplicationTests {
 
     @Test
     public void test111() {
-
-        List<Integer> list1 = new ArrayList<>();
-
-        for(int i=0;i<10;i++){
-            list1.add(i);
-
-        }
-        List<Integer> list2 = new ArrayList<>();
-
-        for(int i=0;i<5;i++){
-            list2.add(i);
-
-        }
-
-        for (int value : list1) {
-            for (int ints : list2) {
-                if (value == ints) {
-                    System.out.println(value);
-                }
-            }
-        }
-
 
 
     }

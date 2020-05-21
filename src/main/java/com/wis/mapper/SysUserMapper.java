@@ -36,4 +36,10 @@ public interface SysUserMapper {
     @Update("update wis_user set lxdh=#{telephone},cname=#{adminName} where id=#{id}")
     void updateAdminById(Integer id,String adminName,String telephone);
 
+    @Delete("delete from wis_item_group where id=#{id}")
+    void deleteGroupById(Integer id);
+
+    @Delete("delete from wis_item_group_relation where item_id = #{itemId} and group_id = #{groupId}")
+    void deleteGroupItemById(int itemId,Integer groupId);
+
 }

@@ -12,31 +12,31 @@ public class ItemTypeUtil {
             return "摄像头";
         }
         if(wtlx==3){
-            return "信息牌类";
+            return "流量计";
         }
         if(wtlx==4){
-            return "阀门";
+            return "压力变送器";
         }
         if(wtlx==5){
-            return "地面";
+            return "其他";
         }
-        return "管线";
+        return null;
     }
 
     public static int nameToId(String wtlx){
-        if(wtlx.equals("办公大楼")){
+        if("办公大楼".equals(wtlx)){
             return 1;
         }
-        if(wtlx.equals("摄像头")){
+        if("摄像头".equals(wtlx)){
             return 2;
         }
-        if(wtlx.equals("信息牌类")){
+        if("流量计".equals(wtlx)){
             return 3;
         }
-        if(wtlx.equals("阀门")){
+        if("压力变送器".equals(wtlx)){
             return 4;
         }
-        if(wtlx.equals("地面")){
+        if("其他".equals(wtlx)){
             return 5;
         }
             return 6;

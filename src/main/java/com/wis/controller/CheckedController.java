@@ -3,12 +3,15 @@ package com.wis.controller;
 import com.wis.pojo.vo.*;
 import com.wis.service.*;
 import com.wis.utils.ResponseCode;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -78,7 +81,7 @@ public class CheckedController {
 
     @RequestMapping("/getCheckDateList")
     @ResponseBody
-    public List<CheckInfo> getCheckDateList(){
+    public List<CheckInfo> getCheckDateList(String startTime){
 
         return checkDataService.getCheckedDateList();
 

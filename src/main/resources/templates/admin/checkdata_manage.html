@@ -6,28 +6,24 @@
     $(document).ready(function () {
 
         $("#datetime1").datetimepicker({
-            format: 'YYYY-MM-DD HH:mm',
+            format: 'YYYY-MM-DD HH:mm:ss',
             locale: moment.locale('zh-CN')
         });
 
         $("#datetime2").datetimepicker({
-            format: 'YYYY-MM-DD HH:mm',
+            format: 'YYYY-MM-DD HH:mm:ss',
             locale: moment.locale('zh-CN')
         });
 
         // var scene = "";
         //
-        // $("#result").click(function () {
-        //
-        //     var sobj = document.getElementById('selectedScene');
-        //     var sindex = sobj.selectedIndex;
-        //     scene = sobj.options[sindex].value;
-        //
-        //     $("#table").bootstrapTable('refresh', {
-        //         url:"/checked/getCheckDate?sceneId="+scene
-        //     });
-        //
-        // });
+        $("#result").click(function () {
+
+            $("#table").bootstrapTable('refresh', {
+                url:"/checked/getCheckDateList"
+            });
+
+        });
 
         $("#table").bootstrapTable({
             pagination: true,   //是否显示分页条
@@ -42,9 +38,7 @@
             //         limit: params.limit, // 每页显示数量
             //         offset: params.offset, // SQL语句起始索引
             //         page: (params.offset / params.limit) + 1,   //当前页码
-            //         sceneId:scene,
-            //         assetsName:$('#assetsName').val(),
-            //         aid: $('#aid').val(),
+            //         startTime: $('#datetime1').val(),
             //     };
             // },
             columns:[
@@ -75,7 +69,7 @@
                     align:"center",
                     field:"id",
                     formatter:function (value) {
-                        return '<a data-toggle="modal" data-target="#updateAssetsModal" class="btn btn-sm btn-success" onclick="openModal(\'/assets/toUpdateAssets\',\'updateAssetsModal\','+value+')">查看巡检日志</a>'
+                        return '<a data-toggle="modal" data-target="#updateAssetsModal" class="btn btn-sm btn-success" onclick="openModal(\'/checked/toCheckLog\',\'selectLogModal\','+value+')">查看巡检日志</a>'
                     }
                 }
             ]
@@ -132,7 +126,7 @@
     </div>
 </div>
 <!--设置uid模态框-->
-<div class="modal fade" id="updateAssetsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<div class="modal fade" id="selectLogModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 
 <script th:replace="import/script :: script"></script>
 </body>

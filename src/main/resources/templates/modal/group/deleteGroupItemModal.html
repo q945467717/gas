@@ -1,0 +1,53 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<div class="modal-dialog" style="width: 300px">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">移除物体</h4>
+        </div>
+        <div class="modal-body">确定要移除该物体吗？</div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button th:id="${id}" type="button" class="btn btn-primary" onclick="groupItemDelete(this.id)" >确定</button>
+        </div>
+    </div>
+</div>
+</html>
+
+<script>
+    function groupItemDelete(id) {
+
+        var item_id = id.split("-")[0];
+        var group_id = id.split("-")[1];
+
+            $.ajax({
+                // contentType: 'application/json;charset=UTF-8',
+                url: "/group/"+group_id+"/item/"+item_id,
+                data: {},
+                type: "DELETE",
+                dataType: "json",
+                success: function (data) {
+
+                    if(data.code!==10006){
+                        swal({
+                            title: data.msg,
+                            type: "error"
+                        })
+                    }else {
+                        swal({
+                            title: data.msg,
+                            type: "success"
+                        },function(){
+                            $('#deleteGroupItemModal').modal('hide');
+                            $("#table").bootstrapTable('refresh', {
+                                url:"/group/"+group_id+"/items"
+
+                            });
+                            //window.location.reload();
+                        });
+                    }
+
+                }
+            });
+    }
+</script>

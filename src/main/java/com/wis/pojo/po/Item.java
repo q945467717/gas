@@ -120,4 +120,23 @@ public class Item extends Page implements Serializable {
     public int getQpzt() {
         return qpzt;
     }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", sid='" + sid + '\'' +
+                ", uid='" + uid + '\'' +
+                ", lcmc='" + lcmc + '\'' +
+                ", wtlx=" + wtlx +
+                ", addtime=" + addtime +
+                ", cname='" + cname + '\'' +
+                ", content='" + content + '\'' +
+                ", bz='" + bz + '\'' +
+                ", tblx=" + tblx +
+                ", wtzt=" + wtzt +
+                ", qpzt=" + qpzt +
+                ", aid=" + aid +
+                '}';
+    }
 }

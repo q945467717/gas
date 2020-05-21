@@ -1,0 +1,72 @@
+<div class="modal-dialog" style="width: 300px" xmlns:th="http://www.thymeleaf.org">
+    <div class="modal-content" style="width: 260px">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">修改分组</h4>
+        </div>
+        <div class="modal-body" style="width: 250px">
+            <div style="width: 200px">请输入分组名称:<input type="text" th:value="${groupName}" id="group_name"/></div>
+            <div style="width: 165px">请选择所属场景
+                <select class="form-control" id="uscene">
+                    <option th:value="${scene.sceneId}" th:text="${scene.sceneName}" selected="selected"></option>
+                    <option th:value="${sceneInfo.sceneId}" th:each="sceneInfo:${sceneInfoList}" th:text="${sceneInfo.sceneName}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button th:id="${id}" type="button" class="btn btn-primary" onclick="updateGroup(this.id)" >确定</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function updateGroup(id) {
+
+        if($("#group_name").val()===''){
+            swal({
+                title: "请输入分组名称",
+                type: "warning"
+            });
+            return;
+        }
+
+        var obj = document.getElementById('uscene');
+        var index = obj.selectedIndex;
+        var sceneId = obj.options[index].value;
+
+        var group_name = $("#group_name").val();
+
+        var date = {'groupName':group_name,"sceneId":sceneId};
+
+        $.ajax({
+            contentType: 'application/json;charset=UTF-8',
+            url:"/group/"+id,
+            data:JSON.stringify(date),
+            type:"PUT",
+            dataType:"json",
+            success:function (data) {
+
+                if(data.code!==10004){
+                    swal({
+                        title: data.msg,
+                        type: "error"
+                    });
+                }else {
+                    swal({
+                        title: data.msg,
+                        type: "success"
+                    },function(){
+                        $('#updateGroupModal').modal('hide');
+
+                        $("#table").bootstrapTable('refresh', {
+                            url:"/group/list"
+                        });
+                    });
+                }
+            }
+        })
+
+    }
+</script>

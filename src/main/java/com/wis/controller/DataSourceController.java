@@ -1,10 +1,12 @@
 package com.wis.controller;
 
-import com.wis.pojo.vo.ApiResult;
-import com.wis.pojo.vo.DataSourceVo;
-import com.wis.pojo.vo.PageHelper;
-import com.wis.pojo.vo.SceneInfo;
+import com.wis.mapper.DataSourceMapper;
+import com.wis.mapper.ItemMapper;
+import com.wis.pojo.po.Item;
+import com.wis.pojo.po.ItemData;
+import com.wis.pojo.vo.*;
 import com.wis.service.DataSourceService;
+import com.wis.service.ItemService;
 import com.wis.service.SceneService;
 import com.wis.utils.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,12 @@ public class DataSourceController {
     private DataSourceService dataSourceService;
     @Autowired
     private SceneService sceneService;
-
+    @Autowired
+    private DataSourceMapper dataSourceMapper;
+    @Autowired
+    private ItemService itemService;
+    @Autowired
+    private ItemMapper itemMapper;
 
     @RequestMapping("/index")
     public String index(Model model){
@@ -43,6 +50,22 @@ public class DataSourceController {
     @RequestMapping("/toUpdateSource")
     public String toUpdateSource(Model model,Integer id){
 
+        ItemData itemData = dataSourceMapper.findById(id);
+
+        SceneInfo sceneInfo = sceneService.getScene(itemData.getScadaSid());
+
+        Item item = itemMapper.findItemById(itemData.getItemId());
+
+        List<ItemInfo> itemInfoList = itemService.getItemListBySceneId(sceneInfo.getSceneId());
+
+        for (ItemInfo itemInfo : itemInfoList) {
+
+            if (itemInfo.getUid().equals(item.getUid())) {
+                model.addAttribute("uid", itemInfo.getUid());
+            }
+        }
+        model.addAttribute("itemList", itemInfoList);
+        model.addAttribute("dataName", itemData.getDataName());
         model.addAttribute("id",id);
 
 
@@ -52,9 +75,9 @@ public class DataSourceController {
 
     @PostMapping("/{id}")
     @ResponseBody
-    public ApiResult updateSource(@PathVariable("id")Integer id, String dataName){
+    public ApiResult updateSource(@PathVariable("id")Integer id, String dataName,String uid){
 
-        dataSourceService.updateSource(id,dataName);
+        dataSourceService.updateSource(id,dataName,uid);
 
         return new ApiResult(ResponseCode.UPDATE_SUCCESS,null);
     }

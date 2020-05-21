@@ -1,12 +1,15 @@
 package com.wis.service.impl;
 
 import com.wis.mapper.DataSourceMapper;
+import com.wis.mapper.ItemMapper;
 import com.wis.mapper.SceneMapper;
+import com.wis.pojo.po.Item;
 import com.wis.pojo.po.ItemData;
 import com.wis.pojo.po.Scene;
 import com.wis.pojo.vo.DataSourceVo;
 import com.wis.pojo.vo.PageHelper;
 import com.wis.service.DataSourceService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,24 +23,34 @@ public class DataSourceServiceImpl implements DataSourceService {
     private DataSourceMapper dataSourceMapper;
     @Autowired
     private SceneMapper sceneMapper;
+    @Autowired
+    private ItemMapper itemMapper;
 
     @Override
     public PageHelper<DataSourceVo> dataSourceList(Integer scadaSid, Integer pid, Integer limit, Integer offset) {
 
+        //查询当前分页数据
         List<ItemData> itemDataList = dataSourceMapper.findAllData(scadaSid,pid,limit,offset);
 
         List<DataSourceVo> dataSourceVoList = new ArrayList<>();
 
+        DataSourceVo dataSourceVo;
         for(ItemData itemData:itemDataList){
 
             Scene scene = sceneMapper.findBySid(itemData.getScadaSid());
 
-            DataSourceVo dataSourceVo = new DataSourceVo(){{
+            Item item = itemMapper.findItemById(itemData.getItemId());
+
+            dataSourceVo = new DataSourceVo(){{
                 setDataName(itemData.getDataName());
                 setPid(itemData.getPid());
                 setPname(itemData.getPname());
                 setId(itemData.getId());
                 setStationName(scene.getSceneName());
+
+
+                setUid(item.getUid());
+
 
             }};
             dataSourceVoList.add(dataSourceVo);
@@ -54,8 +67,10 @@ public class DataSourceServiceImpl implements DataSourceService {
     }
 
     @Override
-    public void updateSource(Integer id, String dataName) {
+    public void updateSource(Integer id, String dataName,String uid) {
 
-        dataSourceMapper.update(id,dataName);
+        Item item = itemMapper.findByUid(uid);
+
+        dataSourceMapper.update(id,dataName,item.getId());
     }
 }

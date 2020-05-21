@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wis.mapper.GroupMapper">
+
+    <select id="findPageGroup" resultMap="GroupResultMap">
+        select * from wis_item_group where 1=1
+        <if test="groupName!=null and groupName !=''">
+            AND group_name like CONCAT('%',#{groupName},'%')
+        </if>
+        <if test="sceneId!=null and sceneId !=''">
+            AND scene_id =#{sceneId}
+        </if>
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="getGroupTotal" resultType="java.lang.Integer">
+        select count(1) from wis_item_group where 1=1
+        <if test="groupName!=null and groupName !=''">
+            AND group_name like CONCAT('%',#{groupName},'%')
+        </if>
+        <if test="sceneId!=null and sceneId !=''">
+            AND scene_id =#{sceneId}
+        </if>
+    </select>
+
+    <select id="findPageGroupItem" resultType="com.wis.pojo.po.Item">
+        select wi.* from wis_item wi left join wis_item_group_relation wigr on wi.id = wigr.item_id where wigr.group_id=#{groupId}
+        <if test="item.cname!=null and item.cname !=''">
+            AND wi.cname like CONCAT('%',#{item.cname},'%')
+        </if>
+        <if test="item.wtlx!=0">
+            AND wi.wtlx =#{item.wtlx}
+        </if>
+        <if test="item.uid!=null and item.uid !=''">
+            AND wi.uid like CONCAT('%',#{item.uid},'%')
+        </if>
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="getGroupItemTotal" resultType="java.lang.Integer">
+        select count(1) from wis_item wi left join wis_item_group_relation wigr on wi.id = wigr.item_id where wigr.group_id=#{groupId}
+        <if test="item.cname!=null and item.cname !=''">
+            AND wi.cname like CONCAT('%',#{item.cname},'%')
+        </if>
+        <if test="item.wtlx!=0">
+            AND wi.wtlx =#{item.wtlx}
+        </if>
+        <if test="item.uid!=null and item.uid !=''">
+            AND wi.uid like CONCAT('%',#{item.uid},'%')
+        </if>
+    </select>
+
+
+    <resultMap id="GroupResultMap" type="com.wis.pojo.po.Group">
+        <id column="id" property="id"/>
+        <result column="group_name" property="groupName"/>
+        <result column="scene_id" property="sceneId"/>
+    </resultMap>
+
+
+</mapper>

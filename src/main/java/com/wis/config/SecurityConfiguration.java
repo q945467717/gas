@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/item/**","/sys/**","/admin/**","/scene/**","/assets/**","/checked/**").authenticated()
+                .antMatchers("/item/**","/sys/**","/admin/**","/scene/**","/assets/**","/checked/**","/dataSource/**","/group/**").authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/toLogin").loginProcessingUrl("/login_check").permitAll()

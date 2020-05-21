@@ -67,11 +67,15 @@
                     field:"dataName",
                     align:"center"
                 },{
+                    title:"UID",
+                    field:"uid",
+                    align:"center"
+                },{
                     title:"操作",
                     align:"center",
                     field:"id",
                     formatter:function (value) {
-                        return '<a data-toggle="modal" data-target="#updateSourceModal" class="btn btn-sm btn-success" onclick="openModal(\'/dataSource/toUpdateSource\',\'updateSourceModal\','+value+')">设置名称</a>'
+                        return '<a data-toggle="modal" data-target="#updateSourceModal" class="btn btn-sm btn-success" onclick="openModal(\'/dataSource/toUpdateSource\',\'updateSourceModal\','+value+')">修改</a>'
                     }
                 }
             ]

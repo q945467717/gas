@@ -6,6 +6,11 @@ import com.wis.mapper.SysUserMapper;
 import com.wis.service.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class MainServiceImpl implements MainService {
@@ -21,20 +26,34 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public void deleteAll(int[] checks, String typeName) {
-        if(typeName.equals("item")){
+        if("item".equals(typeName)){
             for(int check:checks){
                 itemMapper.deleteItemById(check);
             }
         }
-        if(typeName.equals("scene")){
+        if("scene".equals(typeName)){
             for(int check:checks){
                 sceneMapper.deleteSceneById(check);
             }
         }
-        if(typeName.equals("admin")){
+        if("admin".equals(typeName)){
             for(int check:checks){
                 sysUserMapper.deleteUserById(check);
             }
         }
+        if("group".equals(typeName)){
+            for(int check:checks){
+                sysUserMapper.deleteGroupById(check);
+            }
+        }
+        if(typeName.startsWith("groupItem")){
+            List<String> list = Arrays.asList(typeName.split("_"));
+
+            for(int check:checks){
+                sysUserMapper.deleteGroupItemById(check,Integer.parseInt(list.get(1)));
+            }
+
+        }
+
     }
 }

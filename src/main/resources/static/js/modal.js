@@ -4,8 +4,11 @@
  * @param modalId 模态框id
  */
 function openModal(url, modalId,id) {
+
+    console.log(id);
+
     $("#"+modalId).empty();
-    registerEvent(modalId);
+    //registerEvent(modalId);
     $.ajax({
         url: url,
         data:{"id":id},
