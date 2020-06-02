@@ -5,30 +5,52 @@
 <mapper namespace="com.wis.mapper.CheckMapper">
 
     <select id="findAll" resultMap="checkedResultMap">
-        SELECT * FROM wis_item_checked WHERE 1 = 1
-<!--        <if test="assetsName!=null and assetsName !=''">-->
-<!--            AND assets_name LIKE CONCAT('%',#{assetsName},'%')-->
-<!--        </if>-->
-<!--        <if test="assetsSid!=null and assetsSid !=''">-->
-<!--            and assets_sid = #{assetsSid}-->
-<!--        </if>-->
-<!--        <if test="aid!=null and aid !=''">-->
-<!--            and assets_aid = #{aid}-->
-<!--        </if>-->
-<!--        LIMIT #{offset},#{limit}-->
+        SELECT * FROM wis_item_checked
     </select>
 
-    <select id="getTotal" resultType="java.lang.Integer">
-        SELECT count(1) FROM wis_item_assets WHERE 1 = 1
-<!--        <if test="assetsName!=null and assetsName !=''">-->
-<!--            AND assets_name LIKE CONCAT('%',#{assetsName},'%')-->
-<!--        </if>-->
-<!--        <if test="assetsSid!=null and assetsSid !=''">-->
-<!--            and assets_sid = #{assetsSid}-->
-<!--        </if>-->
-<!--        <if test="aid!=null and aid !=''">-->
-<!--            and assets_aid = #{aid}-->
-<!--        </if>-->
+    <select id="findFilterList" resultMap="checkedResultMap">
+        select wic.* from wis_item_checked wic left join wis_item_assets wia on wia.assets_aid = wic.check_item_aid left join wis_scene ws on wic.check_item_sid = ws.scada_sid where 1=1
+                <if test="checkMember!=null and checkMember !=''">
+                    AND wic.check_member LIKE CONCAT('%',#{checkMember},'%')
+                </if>
+                <if test="assetsName!=null and assetsName !=''">
+                    and wia.assets_name LIKE CONCAT('%',#{assetsName},'%')
+                </if>
+                <if test="scadaSid!=0">
+                    and wic.check_item_sid = #{scadaSid}
+                </if>
+                <if test="status!=0">
+                    and wic.item_status = #{status}
+                </if>
+                <if test="startTime!=null and startTime !=''">
+                    and wic.check_time &gt; #{startTime}
+                </if>
+                <if test="endTime!=null and endTime !=''">
+                    and wic.check_time &lt; #{endTime}
+                </if>
+                limit #{offset},#{limit}
+    </select>
+
+    <select id="getDataTotal" resultType="java.lang.Integer">
+        select count(1) from wis_item_checked wic left join wis_item_assets wia on wia.assets_aid = wic.check_item_aid left join wis_scene ws on wic.check_item_sid = ws.scada_sid where 1=1
+        <if test="checkMember!=null and checkMember !=''">
+            AND wic.check_member LIKE CONCAT('%',#{checkMember},'%')
+        </if>
+        <if test="assetsName!=null and assetsName !=''">
+            and wia.assets_name LIKE CONCAT('%',#{assetsName},'%')
+        </if>
+        <if test="scadaSid!=0">
+            and wic.check_item_sid = #{scadaSid}
+        </if>
+        <if test="status!=0">
+            and wic.item_status = #{status}
+        </if>
+        <if test="startTime!=null and startTime !=''">
+            and wic.check_time &gt; #{startTime}
+        </if>
+        <if test="endTime!=null and endTime !=''">
+            and wic.check_time &lt; #{endTime}
+        </if>
     </select>
 
     <resultMap id="checkedResultMap" type="com.wis.pojo.po.CheckedData">

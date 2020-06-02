@@ -102,7 +102,7 @@ public class AssetsServiceImpl implements AssetsService {
 
     @Override
     @Transactional
-    public void updateAssets(Integer id, String uid) throws Exception{
+    public void updateAssets(Integer id, String uid){
         Assets assets = assetsMapper.findById(id);
         Scene scene = sceneMapper.findBySid(assets.getAssetsSid());
 

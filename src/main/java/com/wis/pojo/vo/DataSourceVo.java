@@ -11,7 +11,5 @@ public class DataSourceVo {
     private String dataName;
     private String stationName;
     private String uid;
-
-
-
+    private String  itemName;
 }

@@ -16,19 +16,19 @@
                 {
                     checkbox:true
                 },{
-                    title:"场景ID",
+                    title:"序列号",
                     field:"sceneId",
                     align:"center"
                 },{
-                    title:"场景名称",
+                    title:"场站名称",
                     field:"sceneName",
                     align:"center"
                 },{
-                    title:"对接平台ID",
+                    title:"SCADA场景ID",
                     field:"scadaSid",
                     align:"center"
                 },{
-                    title:"模模搭ID",
+                    title:"访问ID",
                     field:"momodaId",
                     align:"center"
                 },{
@@ -50,8 +50,9 @@
 <div class="ibox float-e-margins" >
     <div class="ibox-title">
         <h3 style="display: inline;">
-            全部场景列表<input type="button" id="scene" class="btn btn-danger" data-toggle="modal" data-target="#deleteAllModal" value="批量删除" style="margin-left: 75%;display: inline" onclick="openModal('/toDeleteAll','deleteAllModal',this.id)"/>
-            <input type="button" class="btn btn-success" data-toggle="modal" data-target="#addSceneModal" value="新增场景" style="display: inline" onclick="openModal('/scene/toAddScene','addSceneModal')"/>
+            全部场景列表<input type="button" id="scene" class="btn btn-danger" data-toggle="modal" data-target="#deleteAllModal" value="批量删除" style="margin-left: 80%;display: inline" onclick="openModal('/toDeleteAll','deleteAllModal',this.id)"/>
+<!--            <input type="button" class="btn btn-success" data-toggle="modal" data-target="#addSceneModal" value="新增场景" style="display: inline" onclick="openModal('/scene/toAddScene','addSceneModal')"/>-->
+<!--            <input type="button" class="btn btn-info" value="同步场景" style="display: inline" onclick="syncScene()"/>-->
         </h3>
     </div>
     <!--数据展示-->
@@ -72,4 +73,33 @@
 
 <script th:replace="import/script :: script"></script>
 </body>
+<script>
+    function syncScene() {
+        $.ajax({
+            // contentType: 'application/json;charset=UTF-8',
+            url:"/scene/syncScene",
+            data:{},
+            type:"POST",
+            dataType:"json",
+            success:function (data) {
+
+                if(data.code===0){
+                    swal({
+                        title: data.msg,
+                        type: "error"
+                    });
+                }else {
+                    swal({
+                        title: data.data,
+                        type: "success"
+                    },function(){
+                        $('#addSceneModal').modal('hide');
+                        window.location.reload();
+                    });
+                }
+            }
+        })
+
+    }
+</script>
 </html>

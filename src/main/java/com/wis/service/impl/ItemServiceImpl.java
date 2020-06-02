@@ -185,6 +185,24 @@ public class ItemServiceImpl implements ItemService {
             ItemInfo itemInfo = new ItemInfo();
             itemInfo.setUid(item.getUid());
             itemInfo.setAid(item.getAid());
+            itemInfo.setItemName(item.getCname());
+
+            itemInfoList.add(itemInfo);
+        }
+        return itemInfoList;
+    }
+
+    @Override
+    public List<ItemInfo> getItemListBySceneIdNotCamera(String sceneId) {
+        List<Item> itemList = itemMapper.findBySceneIdNotCamera(sceneId);
+
+        List<ItemInfo> itemInfoList = new ArrayList<>();
+
+        for(Item item:itemList){
+            ItemInfo itemInfo = new ItemInfo();
+            itemInfo.setUid(item.getUid());
+            itemInfo.setAid(item.getAid());
+            itemInfo.setItemName(item.getCname());
 
             itemInfoList.add(itemInfo);
         }

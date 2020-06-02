@@ -23,6 +23,9 @@ public interface ItemService {
 
     List<Integer> addDataSource(Integer itemId, Integer[] dataSourceList);
 
-    //获取单个场景中设备类型为2，3，4的所有物体
+    //获取单个场景中设备类型为2，3，4,5的所有物体
     List<ItemInfo> getItemListBySceneId(String sceneId);
+
+    //获取单个场景中设备类型为3，4,5的所有物体
+    List<ItemInfo> getItemListBySceneIdNotCamera(String sceneId);
 }

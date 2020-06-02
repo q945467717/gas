@@ -12,7 +12,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +26,8 @@ public class SceneServiceImpl implements SceneService {
 
     @Autowired
     private SceneMapper sceneMapper;
+    @Value("${IP}")
+    private String ip;
 
     //展示所有场景信息
     @Override
@@ -73,7 +77,7 @@ public class SceneServiceImpl implements SceneService {
 
     //修改场景
     @Override
-    public void updateScene(SceneInfo sceneInfo){
+    public void updateScene(SceneInfo sceneInfo) {
 
         int id = sceneInfo.getId();
         String momodaId = sceneInfo.getMomodaId();
@@ -104,7 +108,7 @@ public class SceneServiceImpl implements SceneService {
     public void matchingSceneId() {
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("http://localhost:8081/init/scene.config")
+                .url("http://" + ip + ":8081/init/scene.config")
                 .build();
 
         Call call = okHttpClient.newCall(request);
@@ -141,5 +145,60 @@ public class SceneServiceImpl implements SceneService {
         sceneInfo.setSceneId(scene.getSceneId());
 
         return sceneInfo;
+    }
+
+    @Override
+    public void syncScene() {
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("http://localhost:8081/init/scene.config")
+                .build();
+
+        Call call = okHttpClient.newCall(request);
+
+        try {
+            Response response = call.execute();
+            if (response.body() != null) {
+                //sceneId和访问idJSON字符串转为map
+                Map<String, Object> map = JSONObject.parseObject(response.body().string());
+
+                //遍历map
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+
+                    //将map的value（值为sceneId）转为string
+                    String sceneId = String.valueOf(entry.getValue());
+
+                    //判断该sceneId是否存在，如果不存在添加记录
+                    if (StringUtils.isEmpty(sceneMapper.findSceneById(sceneId))) {
+
+                        Scene scene = new Scene(){{
+                            setSceneId(sceneId);
+                            setMomodaId(entry.getKey());
+                            setAddTime(new Date());
+                        }};
+
+                        sceneMapper.addScene(scene);
+
+                    }else {      //否则修改
+
+                        sceneMapper.updateMomodaId(sceneId,entry.getKey());
+                    }
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void uploadScene(String mid) {
+
+        sceneMapper.uploadScene(mid,new Date());
+
     }
 }

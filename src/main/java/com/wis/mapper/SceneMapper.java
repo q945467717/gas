@@ -4,6 +4,7 @@ import com.wis.pojo.po.Scene;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -41,5 +42,12 @@ public interface SceneMapper {
 
     @Select("select * from wis_scene where momoda_id=#{mid}")
     Scene findByMomodaId(String mid);
+
+    @Update("update wis_scene set momoda_id=#{momodaId} where sceneid=#{sceneId}")
+    void updateMomodaId(String sceneId,String momodaId);
+
+    //上传成功后添加场景
+    @Insert("insert into wis_scene(momoda_id,addtime) values(#{mid},#{addTime})")
+    void uploadScene(String mid, Date addTime);
 
 }

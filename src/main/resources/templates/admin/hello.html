@@ -3,23 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/static/css/mystyle.css}">
 </head>
 <body>
-    <h1>欢迎登陆</h1>
+<!--    <h1>欢迎登陆</h1>-->
 <!--    <input id='file' name="file" type='file' value="" OnChange='javascript:upload();' title="场景包为模模搭官网下载的zip格式的压缩包" style="width: 230px;height: 53px;cursor: pointer; font-size: 1px;"/>-->
+<div class="index_container">
+    <div class="name">
+        管理员：<span th:if="${user.username}=='admin'" th:text="超级管理员"></span>
+        <span th:if="${user.username}!='admin'" th:text="${user.cname}"></span>,您好！
+    </div>
+    <div class="status">
+        <div class="all">
+            <div class="info">当前在线场站共</div>
+            <div class="num">
+                <span class="num1" th:text="${allCount}"></span>
+                <span class="unit">个</span>
+            </div>
+        </div>
+        <div class="warning_danger">
+            <div class="info">严重告警</div>
+            <div class="num">
+                <span class="num1" th:text="${warningDanger}"></span>
+                <span class="unit">个</span>
+            </div>
+        </div>
+        <div class="warning_normal">
+            <div class="info">一般告警</div>
+            <div class="num">
+                <span class="num1" th:text="${warningNormal}"></span>
+                <span class="unit">个</span>
+            </div>
+        </div>
+
+    </div>
+    <div class="scene_list">
+        <div class="title">管理场站列表</div>
+        <div class="list">
+            <div th:each="sceneInfo:${sceneInfoList}" th:text="${sceneInfo['name']}" th:class="${sceneInfo['status']}==null?'':${sceneInfo['status']==2?'orange':'red'}"></div>
+        </div>
+    </div>
+</div>
 </body>
+<style>
+    .red {color: red}
+    .orange {color: orange}
+</style>
 
-
-<script>
-    var path = "http://localhost:8081";
-
-    function upload() {
-        P2.controller.uploadScene(function(back) {
-            console.log(back.content)
-        });
-    }
-</script>
 <script type="text/javascript" th:src="@{/static/js/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/static/js/upload/ajaxfileupload.js}"></script>
-<script type="text/javascript" th:src="@{/static/js/upload/admin.js}"></script>
 </html>

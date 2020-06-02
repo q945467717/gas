@@ -1,5 +1,6 @@
 package com.wis.controller;
 
+import com.wis.dto.CheckedDataFilterDTO;
 import com.wis.pojo.vo.*;
 import com.wis.service.*;
 import com.wis.utils.ResponseCode;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -36,6 +38,20 @@ public class CheckedController {
         model.addAttribute("sceneInfoList",sceneInfoList);
         return "admin/checkdata_manage";
     }
+
+    @GetMapping("/toCheckLog")
+    public String toCheckLog(Integer id,Model model){
+
+        CheckInfo checkedDate = checkDataService.getCheckedDate(id);
+
+        System.out.println(checkedDate.getCheckLog());
+
+        model.addAttribute("log",checkedDate.getCheckLog());
+
+        return "modal/check/selectLogModal";
+    }
+
+
 
     @ResponseBody
     @GetMapping("/assetsInfoList")
@@ -71,7 +87,7 @@ public class CheckedController {
     //更新资产信息
     @PostMapping("/updateAssets")
     @ResponseBody
-    public ApiResult updateAssets(Integer id, String uid) throws Exception {
+    public ApiResult updateAssets(Integer id, String uid){
 
         assetsService.updateAssets(id, uid);
 
@@ -81,9 +97,9 @@ public class CheckedController {
 
     @RequestMapping("/getCheckDateList")
     @ResponseBody
-    public List<CheckInfo> getCheckDateList(String startTime){
+    public ApiResult getCheckDateList(CheckedDataFilterDTO checkedDataFilterDTO){
 
-        return checkDataService.getCheckedDateList();
+        return new ApiResult(ResponseCode.SUCCESS,checkDataService.getCheckedDateList(checkedDataFilterDTO));
 
     }
 

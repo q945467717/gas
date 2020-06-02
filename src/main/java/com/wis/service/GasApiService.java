@@ -29,7 +29,7 @@ public interface GasApiService {
     StringBuffer getMsgInfo(String sceneId, String uid);
 
     //向webservice接口请求数据
-    void autoTask(String sceneId) throws Exception;
+    void autoTask(String sceneId);
 
     List<Item> getEquipmentInfo(String sceneId, Integer[] groupId);
 

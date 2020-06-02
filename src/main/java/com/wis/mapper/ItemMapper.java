@@ -46,8 +46,11 @@ public interface ItemMapper {
     @Select("select uid,id,cname from wis_item where sid=#{sid} and wtlx=3")
     List<Item> findUidByLxAndSceneId(String sid);
 
-    @Select("select * from wis_item where sid=#{sceneId} and wtlx in (2,3,4)")
+    @Select("select * from wis_item where sid=#{sceneId} and wtlx in (2,3,4,5)")
     List<Item> findBySceneId(String sceneId);
+
+    @Select("select * from wis_item where sid=#{sceneId} and wtlx in (3,4,5)")
+    List<Item> findBySceneIdNotCamera(String sceneId);
 
     @Update("update wis_item set aid=#{aid} where sid=#{sceneId} and uid=#{uid}")
     void updateAid(Integer aid,String sceneId,String uid);

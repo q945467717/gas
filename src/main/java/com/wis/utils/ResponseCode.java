@@ -9,6 +9,7 @@ public enum  ResponseCode implements BaseErrorInfoInterface {
     UPDATE_SUCCESS(10004,"修改成功"),
     ADD_SUCCESS(10005,"添加成功"),
     DELETE_SUCCESS(10006,"删除成功"),
+    UPLOAD_SUCCESS(10007,"上传场景成功"),
 
     AUTHORITY_ERROR(40001,"未登录或token过期"),
     ACCESS_ERROR(40002,"登录用户无访问权限"),

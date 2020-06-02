@@ -15,5 +15,5 @@ public interface AssetsService {
     AssetsInfo assets(Integer id);
 
     //修改资产信息所属uid
-    void updateAssets(Integer id,String uid) throws Exception;
+    void updateAssets(Integer id,String uid);
 }

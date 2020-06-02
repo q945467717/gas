@@ -27,3 +27,17 @@
 /* .dropdown-menu{
 	background-color: #333;;
 } */
+
+.index_container {width: 96%;height: 96%;position: absolute;padding: 10px 20px}
+.index_container .status {display: flex}
+.index_container .status > div {flex:1;border: 1px solid;margin: 100px 150px;text-align: center;height: 120px;border-radius: 10px;}
+.index_container .status > div .info{padding: 10px 0}
+.index_container .status .all .num .num1{font-size: 40px;color: #259c12;margin-right: 20px}
+.index_container .status .warning_danger .num .num1{font-size: 40px;color: #ff0505;margin-right: 20px}
+.index_container .status .warning_normal .num .num1{font-size: 40px;color: #fea702;margin-right: 20px}
+
+
+
+.index_container .scene_list .list{display: flex;flex-wrap: wrap;}
+.index_container .scene_list .list> div{width: 20%;padding: 1%;border: 1px solid #000000;margin: 1%;text-align: center;}
+

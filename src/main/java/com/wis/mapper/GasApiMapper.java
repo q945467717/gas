@@ -56,8 +56,8 @@ public interface GasApiMapper {
     @Insert("insert into wis_item_data(s_id,pid,pname,ptype,pvalue,pstatus,unit) values(#{scadaSid},#{pid},#{pname},#{ptype},#{pvalue},#{pstatus},#{unit})")
     void addData(ItemData itemData);
 
-    @Update("update wis_item_data set pvalue=#{pvalue} where pid=#{pid} and s_id=#{scadaSid} and ptype=#{ptype}")
-    void updateData(Integer scadaSid, String pvalue, Integer pid, String ptype);
+    @Update("update wis_item_data set pvalue=#{pvalue},update_time = #{date} where pid=#{pid} and s_id=#{scadaSid} and ptype=#{ptype}")
+    void updateData(Integer scadaSid, String pvalue, Integer pid, String ptype,Date date);
 
 
     @ResultMap("ItemDataResultMap")
@@ -101,6 +101,10 @@ public interface GasApiMapper {
     //查询当前场站所有告警数据
     @Select("select wi.id,wi.cname title,wid.pname,wid.data_name name,wi.uid,wid.pvalue,wid.unit,wid.pstatus,wi.wtzt,wi.wtlx,wi.qpzt from wis_item_data wid left join wis_item wi on wid.item_id = wi.id where wid.s_id=#{sid} and wid.pstatus>0;")
     List<WarningInfo> findWarningDataBySid(Integer sid);
+
+    //删除超过一天没有更新的数据
+    @Delete("delete from wis_item_data where now()-update_time>1")
+    List<ItemData> deleteExpireData();
 
 
 }

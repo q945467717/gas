@@ -5,8 +5,6 @@
  */
 function openModal(url, modalId,id) {
 
-    console.log(id);
-
     $("#"+modalId).empty();
     //registerEvent(modalId);
     $.ajax({

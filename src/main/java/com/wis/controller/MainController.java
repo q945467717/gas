@@ -1,5 +1,9 @@
 package com.wis.controller;
 
+import com.wis.mapper.ItemMapper;
+import com.wis.mapper.SceneMapper;
+import com.wis.pojo.po.Item;
+import com.wis.pojo.po.Scene;
 import com.wis.pojo.po.User;
 import com.wis.pojo.vo.ApiResult;
 import com.wis.pojo.vo.ItemInfo;
@@ -11,6 +15,7 @@ import com.wis.service.SceneService;
 import com.wis.utils.ExcelUtil;
 import com.wis.utils.ItemTypeUtil;
 import com.wis.utils.ResponseCode;
+import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -29,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +50,14 @@ public class MainController {
     private ItemService itemService;
     @Autowired
     private SceneService sceneService;
+    @Autowired
+    private SceneMapper sceneMapper;
+    @Autowired
+    private ItemMapper itemMapper;
+
+    @Value("${IP}")
+    private String ip;
+
 
     @CrossOrigin
     @RequestMapping("/login")
@@ -58,6 +73,11 @@ public class MainController {
         return "redirect:toLogin";
     }
 
+    @RequestMapping("/updateScene")
+    public String updateScene(){
+        return "redirect:http://"+ip+":8081/home";
+    }
+
     @RequestMapping("/toLogin")
     public String toLogin(){
         return "login";
@@ -70,13 +90,63 @@ public class MainController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         model.addAttribute("user",user);
+        model.addAttribute("ip",ip);
 
         return "admin/index";
     }
 
     //登陆成功欢迎页面
     @RequestMapping("/admin/hello")
-    public String hello(){
+    public String hello(Model model){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        model.addAttribute("user",user);
+
+        List<Scene> sceneInfoList = sceneMapper.findAllScene();
+
+        model.addAttribute("allCount",sceneInfoList.size());
+
+        //model.addAttribute("sceneInfoList",sceneInfoList);
+
+        List<Map<String ,Object>> mapList = new ArrayList<>();
+
+        List<Item> itemList;
+        int dangerCount = 0;
+        int normalCount = 0;
+
+        for(Scene scene:sceneInfoList){
+
+            Map map = new HashMap();
+            map.put("name",scene.getSceneName());
+
+
+            int nCount = 0;
+            itemList = itemMapper.findBySceneId(scene.getSceneId());
+            for(Item item:itemList){
+                if(item.getWtzt()==3){
+                    map.put("status",3);
+                    dangerCount++;
+                    break;
+                }
+                if(item.getWtzt()==2){
+                    nCount++;
+
+                }
+            }
+            if(nCount!=0){
+                map.put("status",2);
+                normalCount++;
+            }
+            mapList.add(map);
+
+        }
+
+        model.addAttribute("sceneInfoList",mapList);
+
+        model.addAttribute("warningDanger",dangerCount);
+        model.addAttribute("warningNormal",normalCount);
+
         return "admin/hello";
     }
 
@@ -173,36 +243,40 @@ public class MainController {
         MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
 
         MultipartFile file = multipartHttpServletRequest.getFile("courseFile");
-        if(file.isEmpty()) {
+
+        if(StringUtils.isEmpty(file)) {
             return "redirect:/item/importItem";
         }
 
         try {
             InputStream inputStream = file.getInputStream();
-            List<List> list = ExcelUtil.getCourseListByExcel(inputStream, file.getOriginalFilename());
+            List<List<Cell>> list = ExcelUtil.getCourseListByExcel(inputStream, file.getOriginalFilename());
             inputStream.close();
 
-            for(List list1:list){
+            for(List<Cell> list1:list){
 
-                ItemInfo itemInfo = new ItemInfo();
 
-                String sceneId = list1.get(0).toString();
-                SceneInfo sceneInfo = sceneService.showScene(sceneId);
-                itemInfo.setSceneName(sceneInfo.getSceneName());
 
-                int itemType = Integer.parseInt(list1.get(1).toString()) ;
-                itemInfo.setItemType(ItemTypeUtil.type(itemType));
 
-                String uid = list1.get(2).toString();
-                itemInfo.setUid(uid);
-
-                String itemName = list1.get(3).toString();
-                itemInfo.setItemName(itemName);
-
-                String text = list1.get(4).toString();
-                itemInfo.setText(text);
-
-                itemService.addItem(itemInfo);
+//                ItemInfo itemInfo = new ItemInfo();
+//
+//                String sceneId = list1.get(0).toString();
+//                SceneInfo sceneInfo = sceneService.showScene(sceneId);
+//                itemInfo.setSceneName(sceneInfo.getSceneName());
+//
+//                int itemType = Integer.parseInt(list1.get(1).toString()) ;
+//                itemInfo.setItemType(ItemTypeUtil.type(itemType));
+//
+//                String uid = list1.get(2).toString();
+//                itemInfo.setUid(uid);
+//
+//                String itemName = list1.get(3).toString();
+//                itemInfo.setItemName(itemName);
+//
+//                String text = list1.get(4).toString();
+//                itemInfo.setText(text);
+//
+//                itemService.addItem(itemInfo);
 
             }
 
@@ -237,6 +311,28 @@ public class MainController {
     @RequestMapping("/admin/toChangePassword")
     public String toChangePassword(){
         return "modal/changePasswordModal";
+    }
+
+    @PostMapping("/addScene")
+    @ResponseBody
+    public ApiResult addScene(String momodaId,HttpServletRequest request) {
+
+        String request_referer = request.getHeader("Referer");
+
+        if(StringUtils.isEmpty(request_referer)||StringUtils.isEmpty(momodaId)){
+            return new ApiResult(ResponseCode.VALIDATED_ERROR);
+        }else if(!request_referer.equals("http://"+ip+":8081/home")){
+            return new ApiResult(ResponseCode.VALIDATED_ERROR);
+        }
+
+        Scene scene = sceneMapper.findByMomodaId(momodaId);
+
+        if(StringUtils.isEmpty(scene)){
+            sceneService.uploadScene(momodaId);
+            sceneService.matchingSceneId();
+        }
+
+        return new ApiResult(ResponseCode.UPLOAD_SUCCESS);
     }
 
 }

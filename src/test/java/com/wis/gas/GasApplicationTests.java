@@ -8,19 +8,25 @@ import com.wis.mapper.ItemMapper;
 import com.wis.mapper.SceneMapper;
 import com.wis.pojo.po.*;
 import com.wis.utils.WebServiceUtil;
+import io.swagger.annotations.Api;
 import io.swagger.models.auth.In;
 import lombok.SneakyThrows;
 import okhttp3.*;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.cxf.endpoint.Client;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.StringUtils;
 
 import javax.xml.namespace.QName;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RunWith(SpringRunner.class)
@@ -341,23 +347,63 @@ public class GasApplicationTests {
     @Test
     public void test11() {
 
-        addTest test = new addTest();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("http://localhost:8081/init/scene.config")
+                .build();
 
-        List<Integer> list = new ArrayList<>();
+        Call call = okHttpClient.newCall(request);
 
-        test.setList(list);
+        try {
+            Response response = call.execute();
+            if (response.body() != null) {
+                //sceneId和访问idJSON字符串转为map
+                Map<String, Object> map = JSONObject.parseObject(response.body().string());
 
+                //遍历map
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
 
-        System.out.println(list);
+                    //将map的value（值为sceneId）转为string
+                    String sceneId = String.valueOf(entry.getValue());
+
+                    //判断该sceneId是否存在，如果不存在添加记录
+                    if (StringUtils.isEmpty(sceneMapper.findSceneById(sceneId))) {
+
+                        Scene scene = new Scene(){{
+                            setSceneId(sceneId);
+                            setMomodaId(entry.getKey());
+                            setAddTime(new Date());
+                        }};
+
+                        sceneMapper.addScene(scene);
+
+                    }else {      //否则修改
+
+                        sceneMapper.updateMomodaId(sceneId,entry.getKey());
+                    }
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     public void test111() {
 
 
-    }
+        String format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date());
 
+        System.out.println(format);
+
+    }
 
 
 }

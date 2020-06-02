@@ -15,6 +15,7 @@ import com.wis.webservice.ScadaStationServiceService;
 import com.wis.webservice.StationDTO;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,8 @@ public class GasApiServiceImpl implements GasApiService {
     private SceneMapper sceneMapper;
     @Autowired
     private RedisUtil redisUtil;
+    @Value("${IP}")
+    private String ip;
 
     @Override
     public List<Map> getItemTable(String sceneId) {
@@ -324,7 +327,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
 
     @Override
     @Transactional
-    public void autoTask(String sceneId) throws Exception {
+    public void autoTask(String sceneId){
 
         Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
 
@@ -346,19 +349,23 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
 //
 //        List<Pvalues> pvalues = stationDataBySid.getPvalues();
 
+        ItemData itemData1;
         for (PValueDTO pValueDTO : pvalues) {
+
+            Date date = new Date();
+
             //判断数据库是否有该条数据
             ItemData itemData = gasApiMapper.findDataByScadaSidAndPid(scene.getScadaSid(), (int) pValueDTO.getPid(), pValueDTO.getPtype());
             if (itemData != null) {         //有该条数据则更新该条数据
-                gasApiMapper.updateData(scene.getScadaSid(), pValueDTO.getPvalue(), itemData.getPid(), pValueDTO.getPtype());
+                gasApiMapper.updateData(scene.getScadaSid(), pValueDTO.getPvalue(), itemData.getPid(), pValueDTO.getPtype(),date);
             } else {                        //否则插入数据
-                ItemData itemData1 = new ItemData() {{
+                itemData1 = new ItemData() {{
                     setScadaSid(scene.getScadaSid());
                     setPid((int) pValueDTO.getPid());
                     setPname(pValueDTO.getPname());
                     setPtype(pValueDTO.getPtype());
                     setPvalue(pValueDTO.getPvalue());
-                    setPstatus(0);
+                    setUpdateTime(date);
                     setUnit(pValueDTO.getUnit());
                 }};
 
@@ -366,7 +373,6 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
             }
 
         }
-
         //更新整体场站信息
         gasApiMapper.updateSceneDate(stationDataBySid.getStatName(), stationDataBySid.getStatus(), stationDataBySid.getTimeCreated(), scene.getId());
     }
@@ -479,7 +485,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
 
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("http://localhost:8081/init/scene.config")
+                .url("http://"+ip+":8081/init/scene.config")
                 .build();
 
         Call call = okHttpClient.newCall(request);

@@ -1,6 +1,10 @@
 package com.wis.config;
 
 
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -28,4 +32,5 @@ public class MyConfiguration {
         source.registerCorsConfiguration("/**", buildConfig());
         return new CorsFilter(source);
     }
+
 }

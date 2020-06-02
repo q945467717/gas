@@ -22,5 +22,11 @@ public interface SceneService {
     //根据sid获取场景信息
     SceneInfo  getScene(Integer sid);
 
+    //同步场景
+    void syncScene();
+
+    //上传成功后添加场景
+    void uploadScene(String mid);
+
 
 }

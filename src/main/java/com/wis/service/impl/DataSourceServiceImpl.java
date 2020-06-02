@@ -47,11 +47,8 @@ public class DataSourceServiceImpl implements DataSourceService {
                 setPname(itemData.getPname());
                 setId(itemData.getId());
                 setStationName(scene.getSceneName());
-
-
                 setUid(item.getUid());
-
-
+                setItemName(item.getCname());
             }};
             dataSourceVoList.add(dataSourceVo);
         }

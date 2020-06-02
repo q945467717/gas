@@ -10,7 +10,7 @@
 <body>
 <div class="ibox float-e-margins" >
     <div class="ibox-title">
-        <h3 style="display: inline;">批量导入物体</h3>
+        <h3 style="display: inline;">批量导入</h3>
     </div>
     <!--数据展示-->
     <div class="ibox-content">
@@ -31,13 +31,41 @@
                 </form>
                 <tr>
                     <td colspan="2">
-                        注：文件为office(97-2003)Excel表； 新版xlsx文件另存一下； 上传时间可能较长，请不要关闭窗口，点击【
+                        注：该功能用于批量添加uid,上传时间可能较长，请不要关闭窗口，点击【
                         <a th:href="@{/downloadFile}" style="color:red" target="_blank">样表下载</a>】
                     </td>
                 </tr>
             </table>
         </div>
     </div>
+
+<!--    <div class="ibox-content">-->
+<!--        <div style="width: 100%">-->
+<!--            <table class="table table-striped table-bordered" id="table1">-->
+<!--                <tr>-->
+<!--                    <th colspan="2" style="text-align: center">批量绑定资产</th>-->
+<!--                </tr>-->
+<!--                <form th:action="@{/uploadFile}" method="post" enctype="multipart/form-data">-->
+<!--                    <tr>-->
+<!--                        <td style="width: 100px;text-align: right">文件:</td>-->
+<!--                        <td><input type="file" name="courseFile"></td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td style="width: 100px;text-align: right">操作:</td>-->
+<!--                        <td><input type="submit" class="btn btn-sm btn-info" value="导入数据" style="padding: 2px"></td>-->
+<!--                    </tr>-->
+<!--                </form>-->
+<!--                <tr>-->
+<!--                    <td colspan="2">-->
+<!--                        注：该功能用于绑定uid和资产信息，上传时间可能较长，请不要关闭窗口，点击【-->
+<!--                        <a th:href="@{/downloadFile}" style="color:red" target="_blank">样表下载</a>】-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--            </table>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
 </div>
 <!--添加物体模态框-->
 <div class="modal fade" id="addThingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>

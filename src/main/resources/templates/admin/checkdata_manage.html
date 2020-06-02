@@ -15,9 +15,19 @@
             locale: moment.locale('zh-CN')
         });
 
-        // var scene = "";
-        //
+        var scene = 0;
+        var status=0;
+
+
         $("#result").click(function () {
+
+            var sobj = document.getElementById('selectedScene');
+            var sindex = sobj.selectedIndex;
+            scene = sobj.options[sindex].value;
+
+            var stobj = document.getElementById('status');
+            var stindex = stobj.selectedIndex;
+            status = stobj.options[stindex].value;
 
             $("#table").bootstrapTable('refresh', {
                 url:"/checked/getCheckDateList"
@@ -32,18 +42,39 @@
             pageList: [5,10,15],  //选择每页显示多少行，数据过少时可能会没有效果
             url:"/checked/getCheckDateList",
             method:"get",
-            // sidePagination:'server',
-            // queryParams:function (params) {
-            //     return {
-            //         limit: params.limit, // 每页显示数量
-            //         offset: params.offset, // SQL语句起始索引
-            //         page: (params.offset / params.limit) + 1,   //当前页码
-            //         startTime: $('#datetime1').val(),
-            //     };
-            // },
+            sidePagination:'server',
+            responseHandler:function(res){
+                return res.data
+            },
+            queryParams:function (params) {
+                return {
+                    limit: params.limit, // 每页显示数量
+                    offset: params.offset, // SQL语句起始索引
+                    page: (params.offset / params.limit) + 1,   //当前页码
+                    startTime: $('#datetime1').val(),
+                    endTime: $('#datetime2').val(),
+                    assetsName:$('#assetsName').val(),
+                    checkMember:$('#checkMember').val(),
+                    scadaSid:scene,
+                    status:status,
+
+                };
+            },
             columns:[
                 {
                     checkbox:true
+                },{
+                    title:"资产名称",
+                    field:"assetsName",
+                    align:"center"
+                },{
+                    title:"所属场站",
+                    field:"sceneName",
+                    align:"center"
+                },{
+                    title:"设备状态",
+                    field:"status",
+                    align:"center"
                 },{
                     title:"巡检人",
                     field:"checkMember",
@@ -53,23 +84,11 @@
                     field:"checkTime",
                     align:"center"
                 },{
-                    title:"资产名称",
-                    field:"assetsName",
-                    align:"center"
-                },{
-                    title:"设备状态",
-                    field:"status",
-                    align:"center"
-                },{
-                    title:"所属场景",
-                    field:"sceneName",
-                    align:"center"
-                },{
                     title:"操作",
                     align:"center",
                     field:"id",
                     formatter:function (value) {
-                        return '<a data-toggle="modal" data-target="#updateAssetsModal" class="btn btn-sm btn-success" onclick="openModal(\'/checked/toCheckLog\',\'selectLogModal\','+value+')">查看巡检日志</a>'
+                        return '<a data-toggle="modal" data-target="#selectLogModal" class="btn btn-sm btn-success" onclick="openModal(\'/checked/toCheckLog\',\'selectLogModal\','+value+')">查看巡检日志</a>'
                     }
                 }
             ]
@@ -98,16 +117,16 @@
                     <td style="width: 250px">资产设备名称<input type="text" style="margin: 0 0 0 7px" id="assetsName"></td>
                 </tr>
                 <tr>
-                    <td style="width: 250px">巡检人<input type="text" style="margin: 0 0 0 7px" id="aid"></td>
+                    <td style="width: 250px">巡检人<input type="text" style="margin: 0 0 0 7px" id="checkMember"></td>
                     <td style="width: 300px">所属场景<select class="form-control" style="width: 120px;display: inline;padding: 0;margin: 0 0 0 10px" id="selectedScene">
-                        <option value="">全部场景</option>
-                        <option th:value="${sceneInfo.sceneId}" th:each="sceneInfo:${sceneInfoList}" th:text="${sceneInfo.sceneName}"></option>
+                        <option value="0">全部场景</option>
+                        <option th:value="${sceneInfo.scadaSid}" th:each="sceneInfo:${sceneInfoList}" th:text="${sceneInfo.sceneName}"></option>
                     </select>
                     </td>
-                    <td style="width: 300px">设备状态<select class="form-control" style="width: 120px;display: inline;padding: 0;margin: 0 0 0 10px">
-                        <option value="">选择设备状态</option>
-                        <option value="">正常</option>
-                        <option value="">异常</option>
+                    <td style="width: 300px">设备状态<select class="form-control" style="width: 120px;display: inline;padding: 0;margin: 0 0 0 10px" id="status">
+                        <option value="0">选择设备状态</option>
+                        <option value="1">正常</option>
+                        <option value="2">异常</option>
 
                     </select>
                     </td>

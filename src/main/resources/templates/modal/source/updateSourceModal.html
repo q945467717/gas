@@ -6,11 +6,11 @@
         </div>
         <div class="modal-body" style="width: 250px">
             <div style="width: 200px">请输入名称：<input th:value="${dataName}" type="text" id="dataName"/></div>
-            <div style="width: 200px">请选择需要设置的UID
+            <div style="width: 200px">请选择需要设置的资产名称
                 <select class="form-control" id="uid">
-                    <option th:if="${uid}!=''" th:text="${uid}" selected="selected"></option>
-                    <option th:if="${uid}==''" selected="selected">请选择uid</option>
-                    <option th:each="item:${itemList}" th:if="${uid}!=${item.uid}" th:text="${item.uid}"></option>
+                    <option th:if="${itemName}!=''" th:text="${itemName}" selected="selected"></option>
+                    <option th:if="${itemName}==''" selected="selected">请选择uid</option>
+                    <option th:each="item:${itemList}" th:if="${itemName}!=${item.itemName}" th:value="${item.uid}" th:text="${item.itemName}"></option>
                 </select>
             </div>
         </div>
@@ -28,7 +28,7 @@
 
         var obj = document.getElementById('uid');
         var index = obj.selectedIndex;
-        var uid = obj.options[index].text;
+        var uid = obj.options[index].value;
 
         $.ajax({
             // contentType: 'application/json;charset=UTF-8',

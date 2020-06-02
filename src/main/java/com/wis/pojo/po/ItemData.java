@@ -1,5 +1,7 @@
 package com.wis.pojo.po;
 
+import java.util.Date;
+
 public class ItemData {
 
     private int id;
@@ -13,6 +15,15 @@ public class ItemData {
     private String unit;
     private String warning;
     private String dataName;
+    private Date updateTime;
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public String getDataName() {
         return dataName;

@@ -56,12 +56,12 @@ public class DataSourceController {
 
         Item item = itemMapper.findItemById(itemData.getItemId());
 
-        List<ItemInfo> itemInfoList = itemService.getItemListBySceneId(sceneInfo.getSceneId());
+        List<ItemInfo> itemInfoList = itemService.getItemListBySceneIdNotCamera(sceneInfo.getSceneId());
 
         for (ItemInfo itemInfo : itemInfoList) {
 
-            if (itemInfo.getUid().equals(item.getUid())) {
-                model.addAttribute("uid", itemInfo.getUid());
+            if (itemInfo.getItemName().equals(item.getCname())) {
+                model.addAttribute("itemName", itemInfo.getItemName());
             }
         }
         model.addAttribute("itemList", itemInfoList);

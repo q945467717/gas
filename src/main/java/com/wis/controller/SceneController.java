@@ -153,7 +153,7 @@ public class SceneController {
 
         sceneService.updateScene(sceneInfo);
         //return ResultUtil.success(response.getStatus(),"修改场景成功");
-        return new ApiResult(ResponseCode.UPDATE_SUCCESS,null);
+        return new ApiResult(ResponseCode.UPDATE_SUCCESS);
 
     }
 
@@ -162,7 +162,16 @@ public class SceneController {
     public ApiResult matchingSceneId() {
 
         sceneService.matchingSceneId();
-        return new ApiResult(ResponseCode.MATCHING_SUCCESS, null);
+        return new ApiResult(ResponseCode.MATCHING_SUCCESS);
+
+    }
+
+    @RequestMapping("/syncScene")
+    @ResponseBody
+    public ApiResult syncScene() {
+
+        sceneService.syncScene();
+        return new ApiResult(ResponseCode.MATCHING_SUCCESS);
 
     }
 

@@ -2,7 +2,6 @@ package com.wis.autotask;
 
 
 import com.alibaba.fastjson.JSON;
-import com.wis.annotation.ApiResponse;
 import com.wis.mapper.AssetsMapper;
 import com.wis.mapper.GasApiMapper;
 import com.wis.mapper.ItemMapper;
@@ -13,7 +12,6 @@ import com.wis.pojo.po.ItemData;
 import com.wis.pojo.po.Scene;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -128,6 +126,12 @@ public class StaticScheduleTask {
 
             e.printStackTrace();
         }
+
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    //@Scheduled(fixedRate = 30000)
+    private void deleteExpireData() {
 
     }
 
