@@ -12,6 +12,7 @@ import com.wis.service.DataSourceService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,24 +39,30 @@ public class DataSourceServiceImpl implements DataSourceService {
         for(ItemData itemData:itemDataList){
 
             Scene scene = sceneMapper.findBySid(itemData.getScadaSid());
-
             Item item = itemMapper.findItemById(itemData.getItemId());
-
             dataSourceVo = new DataSourceVo(){{
                 setDataName(itemData.getDataName());
                 setPid(itemData.getPid());
                 setPname(itemData.getPname());
                 setId(itemData.getId());
                 setStationName(scene.getSceneName());
-                setUid(item.getUid());
-                setItemName(item.getCname());
+                setUpdateTime(itemData.getUpdateTime());
             }};
+            if(StringUtils.isEmpty(item)){
+                dataSourceVo.setUid("未设置");
+                dataSourceVo.setItemName("未设置");
+            }else {
+                dataSourceVo.setUid(item.getUid());
+                dataSourceVo.setItemName(item.getCname());
+            }
             dataSourceVoList.add(dataSourceVo);
         }
 
         //获取分页总数
         Integer total = dataSourceMapper.getTotal(scadaSid, pid);
         //封装结果
+        System.out.println(dataSourceVoList.size()+","+total);
+
         PageHelper<DataSourceVo> pageHelper = new PageHelper<>();
         pageHelper.setRows(dataSourceVoList);
         pageHelper.setTotal(total);

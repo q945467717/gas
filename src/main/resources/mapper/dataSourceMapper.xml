@@ -37,6 +37,7 @@
         <result column="unit" property="unit"/>
         <result column="warning" property="warning"/>
         <result column="data_name" property="dataName"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
 
 </mapper>

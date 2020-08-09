@@ -3,8 +3,9 @@ package com.wis.config;
 
 import com.wis.utils.HttpContextUtils;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,8 @@ public class AopConfiguration {
     public void findItemLig(){}
     @Pointcut("execution(public * com.wis.mapper.GasApiMapper.*(..))")
     public void findsceneLig(){}
+    @Pointcut("execution(public * com.wis.autotask.StaticScheduleTask.getScadaDate(..))")
+    public void getExecuteTime(){}
 
 //    @Before("apiLog()")
     public void beforeLog(JoinPoint joinPoint) throws RuntimeException{
@@ -47,7 +50,7 @@ public class AopConfiguration {
         logger.info("ip:"+ipAddress);
     }
 
-//    @Before("findItemLig()")
+    //@Before("findItemLig()")
     public void itemBeforeLog(JoinPoint joinPoint) throws RuntimeException{
 
         System.out.println(joinPoint);
@@ -55,11 +58,33 @@ public class AopConfiguration {
 
     }
 
-//    @Before("findsceneLig()")
-    public void findsceneLig(JoinPoint joinPoint) throws RuntimeException{
+    //@Before("findsceneLig()")
+    public void findsceneLig(JoinPoint joinPoint){
 
         System.out.println(joinPoint);
         logger.info("查询物体111");
+
+    }
+
+    @Around("getExecuteTime()")
+    public Object getExecuteTime(ProceedingJoinPoint pjp){
+
+        long start = System.currentTimeMillis();
+
+        Object object = null;
+
+        try {
+            object = pjp.proceed();
+        }catch (Throwable e){
+
+            e.printStackTrace();
+        }
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("获取数据完成，用时："+(end-start)+"毫秒");
+
+        return object;
 
     }
 

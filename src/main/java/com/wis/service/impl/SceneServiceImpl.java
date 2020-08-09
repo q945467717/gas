@@ -1,12 +1,10 @@
 package com.wis.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wis.exception.UpdateSceneException;
 import com.wis.mapper.SceneMapper;
 import com.wis.pojo.po.Scene;
 import com.wis.pojo.vo.SceneInfo;
 import com.wis.service.SceneService;
-import com.wis.utils.ResponseCode;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

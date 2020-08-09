@@ -12,7 +12,6 @@ import io.swagger.annotations.Api;
 import io.swagger.models.auth.In;
 import lombok.SneakyThrows;
 import okhttp3.*;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.cxf.endpoint.Client;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,7 +70,7 @@ public class GasApplicationTests {
 
             List<Pvalues> list = scadaData.getPvalues();
 
-            System.out.println(list.get(0).getPid());
+            System.out.println(scadaData.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -395,13 +394,55 @@ public class GasApplicationTests {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+
+    public static class SynchronizedScene1 implements Runnable{
+
+        @Override
+        public void run(){
+            if(Thread.currentThread().getName().equals("Thread-4")){
+                method1();
+            }else{
+                method2();
+            }
+        }
+
+        public synchronized static void method1(){
+            System.out.println("method1开始执行:" + Thread.currentThread().getName());
+            try {
+                // 模拟执行内容
+                Thread.sleep(3000);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            System.out.println("method1执行结束:" + Thread.currentThread().getName());
+        }
+
+
+        public synchronized static void method2(){
+            System.out.println("method2开始执行:" + Thread.currentThread().getName());
+            try {
+                // 模拟执行内容
+                Thread.sleep(3000);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            System.out.println("method2执行结束:" + Thread.currentThread().getName());
+        }
+    }
+
+    static SynchronizedScene1 ss1 = new SynchronizedScene1();
+    static SynchronizedScene1 ss2 = new SynchronizedScene1();
+
     @Test
-    public void test111() {
+    public void test111() throws InterruptedException {
 
-
-        String format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(new Date());
-
-        System.out.println(format);
+            Thread t1 = new Thread(ss1);
+            Thread t2 = new Thread(ss2);
+            t1.start();
+            t2.start();
+            t1.join();
+            t2.join();
+            System.out.println("run over");
 
     }
 

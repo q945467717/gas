@@ -6,15 +6,24 @@ import com.wis.mapper.AssetsMapper;
 import com.wis.mapper.GasApiMapper;
 import com.wis.mapper.ItemMapper;
 import com.wis.mapper.SceneMapper;
-import com.wis.pojo.po.Assets;
-import com.wis.pojo.po.Item;
-import com.wis.pojo.po.ItemData;
-import com.wis.pojo.po.Scene;
+import com.wis.pojo.po.*;
+import com.wis.utils.WebServiceUtil;
+import com.wis.webservice.PValueDTO;
+import com.wis.webservice.ScadaDataService;
+import com.wis.webservice.ScadaStationServiceService;
+import com.wis.webservice.StationDTO;
 import okhttp3.*;
+import org.apache.cxf.endpoint.Client;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.xml.namespace.QName;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,7 +41,7 @@ public class StaticScheduleTask {
 
     //@Scheduled(cron = "*/30 * * * * ?")
     @Scheduled(fixedRate = 30000)
-    private void mnsj_func() {
+    public void mnsj_func() {
 
         List<Item> itemList = gasApiMapper.findAllItem();
 
@@ -63,7 +72,7 @@ public class StaticScheduleTask {
      * 定时调用模模搭实时数据接口，向场景推送数据
      */
     //@Scheduled(fixedRate = 45000)
-    private void sendItemData(){
+    public void sendItemData(){
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
@@ -129,10 +138,115 @@ public class StaticScheduleTask {
 
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    //@Scheduled(cron = "0 0 0 * * ?")
     //@Scheduled(fixedRate = 30000)
-    private void deleteExpireData() {
+    public void deleteExpireData() {
+
+        gasApiMapper.deleteExpireData();
 
     }
 
+    //获取SCADA系统数据
+    @Scheduled(fixedRate = 45000)
+    public void getScadaDate() {
+
+        ArrayList<Scene> sceneList = sceneMapper.findAllScene();
+
+        ScadaStationServiceService scadaStationServiceService;
+        ScadaDataService scadaStationServicePort;
+        StationDTO stationDataBySid;
+        List<PValueDTO> pvalues;
+
+        if(!StringUtils.isEmpty(sceneList)){
+            for(Scene scene:sceneList){
+
+                scadaStationServiceService = new ScadaStationServiceService();
+                scadaStationServicePort = scadaStationServiceService.getScadaStationServicePort();
+                stationDataBySid = scadaStationServicePort.findStationDataBySid("2", scene.getScadaSid(), "");
+                pvalues = stationDataBySid.getPvalues();
+
+                ItemData itemData1;
+                if(!StringUtils.isEmpty(pvalues)){
+                    for (PValueDTO pValueDTO : pvalues) {
+
+                        Date date = new Date();
+
+                        //判断数据库是否有该条数据
+                        ItemData itemData = gasApiMapper.findDataByScadaSidAndPid(scene.getScadaSid(), (int) pValueDTO.getPid(), pValueDTO.getPtype());
+                        if (!StringUtils.isEmpty(itemData)) {         //有该条数据则更新该条数据
+                            gasApiMapper.updateData(scene.getScadaSid(), pValueDTO.getPvalue(), itemData.getPid(), pValueDTO.getPtype(),date);
+                        } else {                        //否则插入数据
+                            itemData1 = new ItemData() {{
+                                setScadaSid(scene.getScadaSid());
+                                setPid((int) pValueDTO.getPid());
+                                setPname(pValueDTO.getPname());
+                                setPtype(pValueDTO.getPtype());
+                                setPvalue(pValueDTO.getPvalue());
+                                setUpdateTime(date);
+                                setUnit(pValueDTO.getUnit());
+                            }};
+                            gasApiMapper.addData(itemData1);
+                        }
+                    }
+                }
+                //更新整体场站信息
+                gasApiMapper.updateSceneDate(stationDataBySid.getStatName(), stationDataBySid.getStatus(), stationDataBySid.getTimeCreated(), scene.getId());
+            }
+        }
+    }
+
+//    @Scheduled(fixedRate = 45000)
+//    public void getScadaDate() {
+//
+//        ArrayList<Scene> sceneList = sceneMapper.findAllScene();
+//
+//        ScadaData scadaData;
+//        String json;
+//        List<Pvalues> list;
+//
+//        if(!StringUtils.isEmpty(sceneList)){
+//            for(Scene scene:sceneList){
+//                try {
+//                    Client client = WebServiceUtil.createWebServiceClient("http://portal.cdgas.com/QJYJWService/scadaService?wsdl");
+//                    QName qName = new QName("http://scada.ws.qjyj.com/", "findStationDataBySid");
+//                    Object[] objects = client.invoke(qName, "2", (long)scene.getScadaSid(), "");
+//
+//                    json = JSON.toJSONString(objects[0]);
+//                    scadaData = JSON.parseObject(json, ScadaData.class);
+//                    list = scadaData.getPvalues();
+//
+//                    ItemData itemData1;
+//                    ItemData itemData;
+//                    if(!StringUtils.isEmpty(list)){
+//                        for (Pvalues pvalue : list) {
+//                            Date date = new Date();
+//                            //判断数据库是否有该条数据
+//                            itemData = gasApiMapper.findDataByScadaSidAndPid(scene.getScadaSid(),(int)pvalue.getPid(), pvalue.getPtype());
+//                            if (!StringUtils.isEmpty(itemData)) {         //有该条数据则更新该条数据
+//                                gasApiMapper.updateData(scene.getScadaSid(), pvalue.getPvalue(), itemData.getPid(), pvalue.getPtype(),date);
+//                                //System.out.println(pvalue);
+//                            } else {                        //否则插入数据
+//                                itemData1 = new ItemData() {{
+//                                    setScadaSid(scene.getScadaSid());
+//                                    setPid((int)pvalue.getPid());
+//                                    setPname(pvalue.getPname());
+//                                    setPtype(pvalue.getPtype());
+//                                    setPvalue(pvalue.getPvalue());
+//                                    setUpdateTime(date);
+//                                    setUnit(pvalue.getUnit());
+//                                }};
+//                                //System.out.println(pvalue);
+//
+//                                gasApiMapper.addData(itemData1);
+//                            }
+//                        }
+//                    }
+//                    //更新整体场站信息
+//                    gasApiMapper.updateSceneDate(scadaData.getStatName(), scadaData.getStatus(), scadaData.getTimeCreated(), scene.getId());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 }

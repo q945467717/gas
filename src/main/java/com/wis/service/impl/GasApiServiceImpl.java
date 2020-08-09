@@ -8,7 +8,6 @@ import com.wis.pojo.po.*;
 import com.wis.pojo.vo.*;
 import com.wis.service.GasApiService;
 import com.wis.utils.CheckDataStatusUtil;
-import com.wis.utils.RedisUtil;
 import com.wis.webservice.PValueDTO;
 import com.wis.webservice.ScadaDataService;
 import com.wis.webservice.ScadaStationServiceService;
@@ -35,8 +34,6 @@ public class GasApiServiceImpl implements GasApiService {
     private CheckMapper checkMapper;
     @Autowired
     private SceneMapper sceneMapper;
-    @Autowired
-    private RedisUtil redisUtil;
     @Value("${IP}")
     private String ip;
 
@@ -178,17 +175,17 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
             StringBuilder html = new StringBuilder();
 
             if (!"正常".equals(scene.getSceneStatus())) {
-                String s = "<color=white><size=20>" + scene.getSceneName() + "</size> ；" + date + "</color><color=red>；" + scene.getSceneStatus() + "</color>；";
+                String s = "<color=white><size=20>" + scene.getSceneName() + "</size> ；" + date + "</color><color=red>；" + scene.getSceneStatus() + "</color>；<color=white><size=20>市电状态:</size></color>";
                 html.append(s);
             } else {
-                String s = "<color=white><size=20>" + scene.getSceneName() + "</size> ；" + date + "；</color><color=green><size=18>" + scene.getSceneStatus() + "</size></color>；";
+                String s = "<color=white><size=20>" + scene.getSceneName() + "</size> ；" + date + "；</color><color=green><size=18>" + scene.getSceneStatus() + "</size></color>；<color=white><size=20>市电状态:</size></color>";
                 html.append(s);
             }
-            if ("20180926134038328363371".equals(scene.getSceneId())) {
-
-                String s = "<color=white><size=20>市电状态:</size></color>";
-                html.append(s);
-            }
+//            if ("20180926134038328363371".equals(scene.getSceneId())) {
+//
+//                String s = "<color=white><size=20>市电状态:</size></color>";
+//                html.append(s);
+//            }
             return html.toString();
 
         } catch (Exception e) {

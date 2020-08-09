@@ -258,25 +258,25 @@ public class MainController {
 
 
 
-//                ItemInfo itemInfo = new ItemInfo();
-//
-//                String sceneId = list1.get(0).toString();
-//                SceneInfo sceneInfo = sceneService.showScene(sceneId);
-//                itemInfo.setSceneName(sceneInfo.getSceneName());
-//
-//                int itemType = Integer.parseInt(list1.get(1).toString()) ;
-//                itemInfo.setItemType(ItemTypeUtil.type(itemType));
-//
-//                String uid = list1.get(2).toString();
-//                itemInfo.setUid(uid);
-//
-//                String itemName = list1.get(3).toString();
-//                itemInfo.setItemName(itemName);
-//
-//                String text = list1.get(4).toString();
-//                itemInfo.setText(text);
-//
-//                itemService.addItem(itemInfo);
+                ItemInfo itemInfo = new ItemInfo();
+
+                String sceneId = list1.get(0).toString();
+                SceneInfo sceneInfo = sceneService.showScene(sceneId);
+                itemInfo.setSceneName(sceneInfo.getSceneName());
+
+                int itemType = Integer.parseInt(list1.get(1).toString()) ;
+                itemInfo.setItemType(ItemTypeUtil.type(itemType));
+
+                String uid = list1.get(2).toString();
+                itemInfo.setUid(uid);
+
+                String itemName = list1.get(3).toString();
+                itemInfo.setItemName(itemName);
+
+                String text = list1.get(4).toString();
+                itemInfo.setText(text);
+
+                itemService.addItem(itemInfo);
 
             }
 

@@ -53,7 +53,7 @@ public interface GasApiMapper {
     @Select("select * from wis_item_data where s_id=#{scadaSid}")
     List<ItemData> findDataByScadaSid(Integer scadaSid);
 
-    @Insert("insert into wis_item_data(s_id,pid,pname,ptype,pvalue,pstatus,unit) values(#{scadaSid},#{pid},#{pname},#{ptype},#{pvalue},#{pstatus},#{unit})")
+    @Insert("insert into wis_item_data(s_id,pid,pname,ptype,pvalue,pstatus,unit,update_time) values(#{scadaSid},#{pid},#{pname},#{ptype},#{pvalue},#{pstatus},#{unit},#{updateTime})")
     void addData(ItemData itemData);
 
     @Update("update wis_item_data set pvalue=#{pvalue},update_time = #{date} where pid=#{pid} and s_id=#{scadaSid} and ptype=#{ptype}")
@@ -103,7 +103,7 @@ public interface GasApiMapper {
     List<WarningInfo> findWarningDataBySid(Integer sid);
 
     //删除超过一天没有更新的数据
-    @Delete("delete from wis_item_data where now()-update_time>1")
+    @Delete("delete from wis_item_data where UNIX_TIMESTAMP(update_time)<UNIX_TIMESTAMP(now())-3600*24")
     List<ItemData> deleteExpireData();
 
 

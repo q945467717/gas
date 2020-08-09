@@ -4,6 +4,7 @@ import com.wis.pojo.po.Scene;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface SceneMapper {
 
     @ResultMap("SceneResultMap")
     @Select("select * from wis_scene")
-    List<Scene> findAllScene();
+    ArrayList<Scene> findAllScene();
 
     @ResultMap("SceneResultMap")
     @Select("select * from wis_scene where sceneid=#{sceneId}")
