@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -80,7 +81,7 @@ public class GasApiServiceImpl implements GasApiService {
 
     }
 
-//    @Override
+    //    @Override
 //    public List<Map> getItemYSBH(String sceneId) {
 //
 ////        if (redisUtil.hasKey("item:status:"+sceneId)) {
@@ -137,73 +138,72 @@ public class GasApiServiceImpl implements GasApiService {
 //
 //        return mapList;
 //    }
-@Override
-public List<WarningInfo> getItemYSBH(String sceneId) {
+    @Override
+    public List<WarningInfo> getItemYSBH(String sceneId) {
 
-    Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
-    List<WarningInfo> warningInfoList = gasApiMapper.findWarningDataBySid(scene.getScadaSid());
+        Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
 
-    List<WarningInfo> bigWarningInfoList = new ArrayList<>();
-    List<WarningInfo> smallWarningInfoList = new ArrayList<>();
-
-
-    for(WarningInfo warningInfo:warningInfoList){
-        if(warningInfo.getPstatus()==1||warningInfo.getPstatus()==4){
-            bigWarningInfoList.add(warningInfo);
+        if (StringUtils.isEmpty(scene)) {
+            throw new SceneNotFindException();
         }
-        if(warningInfo.getPstatus()==2||warningInfo.getPstatus()==3){
-            smallWarningInfoList.add(warningInfo);
+        List<WarningInfo> warningInfoList = gasApiMapper.findWarningDataBySid(scene.getScadaSid());
+
+        List<WarningInfo> bigWarningInfoList = new ArrayList<>();
+        List<WarningInfo> smallWarningInfoList = new ArrayList<>();
+
+
+        for (WarningInfo warningInfo : warningInfoList) {
+            if (warningInfo.getPstatus() == 1 || warningInfo.getPstatus() == 4) {
+                bigWarningInfoList.add(warningInfo);
+            }
+            if (warningInfo.getPstatus() == 2 || warningInfo.getPstatus() == 3) {
+                smallWarningInfoList.add(warningInfo);
+            }
+
         }
+
+        List<WarningInfo> warningInfos = new ArrayList<>();
+        warningInfos.addAll(bigWarningInfoList);
+        warningInfos.addAll(smallWarningInfoList);
+
+
+        return warningInfos;
 
     }
 
-    List<WarningInfo> warningInfos = new ArrayList<>();
-    warningInfos.addAll(bigWarningInfoList);
-    warningInfos.addAll(smallWarningInfoList);
-
-
-    return warningInfos;
-
-}
-
+    //    @Override
+//    public String getPinfo(String sceneId) {
+//
+//        try {
+//            Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
+//            String date = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss").format(scene.getUpTime());
+//            StringBuilder html = new StringBuilder();
+//
+//            if (!"正常".equals(scene.getSceneStatus())) {
+//                String s = "<color=white><size=20>" + scene.getSceneName() + "</size> ；" + date + "</color><color=red>；" + scene.getSceneStatus() + "</color>；<color=white><size=20>市电状态:</size></color>";
+//                html.append(s);
+//            } else {
+//                String s = "<color=white><size=20>" + scene.getSceneName() + "</size> ；" + date + "；</color><color=green><size=18>" + scene.getSceneStatus() + "</size></color>；<color=white><size=20>市电状态:</size></color>";
+//                html.append(s);
+//            }
+//            return html.toString();
+//
+//        } catch (Exception e) {
+//            return "<color=red><size=20>未获取到最新数据</size></color>";
+//        }
+//    }
     @Override
     public String getPinfo(String sceneId) {
 
         try {
             Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
-            String date = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss").format(scene.getUpTime());
-            StringBuilder html = new StringBuilder();
-
-            if (!"正常".equals(scene.getSceneStatus())) {
-                String s = "<color=white><size=20>" + scene.getSceneName() + "</size> ；" + date + "</color><color=red>；" + scene.getSceneStatus() + "</color>；<color=white><size=20>市电状态:</size></color>";
-                html.append(s);
-            } else {
-                String s = "<color=white><size=20>" + scene.getSceneName() + "</size> ；" + date + "；</color><color=green><size=18>" + scene.getSceneStatus() + "</size></color>；<color=white><size=20>市电状态:</size></color>";
-                html.append(s);
-            }
-//            if ("20180926134038328363371".equals(scene.getSceneId())) {
-//
-//                String s = "<color=white><size=20>市电状态:</size></color>";
-//                html.append(s);
-//            }
-            return html.toString();
+            return "<color=white><size=20>" + scene.getSceneName() + "</size></color>";
 
         } catch (Exception e) {
             return "<color=red><size=20>未获取到最新数据</size></color>";
         }
-
-
-//        List<Map> list = new ArrayList<>();
-//
-//        Map<String,String> map = new HashMap<>();
-//
-//        map.put("scadaName",scene.getSceneName());
-//        map.put("uptime",date);
-//        map.put("sceneStatus",scene.getSceneStatus());
-//
-//        list.add(map);
-//        return list;
     }
+
 
     @Override
     public void mnsj_func(String sceneId) {
@@ -259,9 +259,9 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
 
         List<CameraInfo> cameraInfoList = new ArrayList<>();
 
-        for(String uid: uids){
+        for (String uid : uids) {
             Item item = gasApiMapper.findItemBySidAndUid(sceneId, uid);
-            CameraInfo cameraInfo = new CameraInfo(){{
+            CameraInfo cameraInfo = new CameraInfo() {{
                 setCname(item.getCname());
                 setContent(item.getContent());
                 setId(item.getId());
@@ -272,8 +272,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
         }
 
 
-
-       // Item item = gasApiMapper.findItemBySidAndUid(sceneId, uid);
+        // Item item = gasApiMapper.findItemBySidAndUid(sceneId, uid);
 
 //        StringBuffer html = new StringBuffer();
 //
@@ -324,7 +323,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
 
     @Override
     @Transactional
-    public void autoTask(String sceneId){
+    public void autoTask(String sceneId) {
 
         Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
 
@@ -354,7 +353,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
             //判断数据库是否有该条数据
             ItemData itemData = gasApiMapper.findDataByScadaSidAndPid(scene.getScadaSid(), (int) pValueDTO.getPid(), pValueDTO.getPtype());
             if (itemData != null) {         //有该条数据则更新该条数据
-                gasApiMapper.updateData(scene.getScadaSid(), pValueDTO.getPvalue(), itemData.getPid(), pValueDTO.getPtype(),date);
+                gasApiMapper.updateData(scene.getScadaSid(), pValueDTO.getPvalue(), itemData.getPid(), pValueDTO.getPtype(), date);
             } else {                        //否则插入数据
                 itemData1 = new ItemData() {{
                     setScadaSid(scene.getScadaSid());
@@ -423,7 +422,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
 
         List<Item> itemList = gasApiMapper.findItemBySidAndLx(sceneId);
 
-        if(groupId.length>0){
+        if (groupId.length > 0) {
 
 //            Map<Integer, Item> itemMap = itemList.stream().collect(
 //                    Collectors.toMap(Item::getId, i -> i)
@@ -432,7 +431,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
 //            List<Item> groupItemList = list.stream().map(itemMap::get
 //            ).collect(Collectors.toList());
             List<Item> groups = new ArrayList<>();
-            for(Integer id: groupId){
+            for (Integer id : groupId) {
                 List<Item> groupList = gasApiMapper.findGroupById(id);
                 groups.addAll(groupList);
 
@@ -440,7 +439,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
 
             return groups;
 
-        }else {
+        } else {
             return itemList;
         }
     }
@@ -460,6 +459,9 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
     public String getElectricity(String sceneId) {
 
         Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
+        if (StringUtils.isEmpty(scene)) {
+            throw new SceneNotFindException();
+        }
 
         ItemData itemData = gasApiMapper.findItemDataByPnameAndScadaSid("%市电状态", scene.getScadaSid());
 
@@ -482,7 +484,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
 
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("http://"+ip+":8081/init/scene.config")
+                .url("http://" + ip + ":8081/init/scene.config")
                 .build();
 
         Call call = okHttpClient.newCall(request);
@@ -535,7 +537,7 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
                     setItemName(item.getCname());
                     setUid(item.getUid());
 
-                }else {
+                } else {
                     throw new SceneNotFindException("场景信息异常");
                 }
             }};
@@ -589,9 +591,9 @@ public List<WarningInfo> getItemYSBH(String sceneId) {
 
         List<GroupInfo> groupInfoList = new ArrayList<>();
 
-        for(Group group:groups){
+        for (Group group : groups) {
 
-            GroupInfo groupInfo = new GroupInfo(){{
+            GroupInfo groupInfo = new GroupInfo() {{
                 setGroupName(group.getGroupName());
                 setId(group.getId());
             }};

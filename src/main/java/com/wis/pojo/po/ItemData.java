@@ -16,6 +16,15 @@ public class ItemData {
     private String warning;
     private String dataName;
     private Date updateTime;
+    private String ptime;
+
+    public String getPtime() {
+        return ptime;
+    }
+
+    public void setPtime(String ptime) {
+        this.ptime = ptime;
+    }
 
     public Date getUpdateTime() {
         return updateTime;

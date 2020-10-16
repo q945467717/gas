@@ -150,7 +150,7 @@ public class SceneServiceImpl implements SceneService {
 
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("http://localhost:8081/init/scene.config")
+                .url("http://" + ip + ":8081/init/scene.config")
                 .build();
 
         Call call = okHttpClient.newCall(request);

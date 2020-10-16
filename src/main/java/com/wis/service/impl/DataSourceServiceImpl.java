@@ -1,5 +1,6 @@
 package com.wis.service.impl;
 
+import com.wis.exception.SceneNotFindException;
 import com.wis.mapper.DataSourceMapper;
 import com.wis.mapper.ItemMapper;
 import com.wis.mapper.SceneMapper;
@@ -61,7 +62,7 @@ public class DataSourceServiceImpl implements DataSourceService {
         //获取分页总数
         Integer total = dataSourceMapper.getTotal(scadaSid, pid);
         //封装结果
-        System.out.println(dataSourceVoList.size()+","+total);
+        //System.out.println(dataSourceVoList.size()+","+total);
 
         PageHelper<DataSourceVo> pageHelper = new PageHelper<>();
         pageHelper.setRows(dataSourceVoList);
@@ -73,7 +74,13 @@ public class DataSourceServiceImpl implements DataSourceService {
     @Override
     public void updateSource(Integer id, String dataName,String uid) {
 
-        Item item = itemMapper.findByUid(uid);
+        ItemData itemData = dataSourceMapper.findById(id);
+
+        Scene scene = sceneMapper.findBySid(itemData.getScadaSid());
+        if(StringUtils.isEmpty(scene)){
+            throw new SceneNotFindException();
+        }
+        Item item = itemMapper.findByUidAndSid(uid,scene.getSceneId());
 
         dataSourceMapper.update(id,dataName,item.getId());
     }

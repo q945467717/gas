@@ -118,6 +118,7 @@ public class ItemController {
     @ResponseBody
     public Result addItem(ItemInfo itemInfo, HttpServletResponse response){
 
+        System.out.println(itemInfo);
         List<ItemInfo> itemInfoList = itemService.itemList();
         for(ItemInfo itemInfos:itemInfoList){
             if(itemInfos.getUid().equals(itemInfo.getUid())&&itemInfos.getSceneName().equals(itemInfo.getSceneName())){

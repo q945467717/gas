@@ -3,6 +3,7 @@ package com.wis.pojo.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -12,7 +13,7 @@ public class AssetsInfo {
     private String assetsName;
     private String assetsManufacturer;
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
-    private Date assetsTime;
+    private LocalDateTime assetsTime;
     private Integer aid;
     private String  sceneName;
     private String uid;

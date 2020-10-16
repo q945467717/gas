@@ -12,6 +12,7 @@ import com.wis.utils.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,11 +59,17 @@ public class DataSourceController {
 
         List<ItemInfo> itemInfoList = itemService.getItemListBySceneIdNotCamera(sceneInfo.getSceneId());
 
-        for (ItemInfo itemInfo : itemInfoList) {
+        if(!StringUtils.isEmpty(item)){
+            for (ItemInfo itemInfo : itemInfoList) {
 
-            if (itemInfo.getItemName().equals(item.getCname())) {
-                model.addAttribute("itemName", itemInfo.getItemName());
+                if (itemInfo.getItemName().equals(item.getCname())) {
+                    model.addAttribute("itemName", itemInfo.getItemName());
+                    model.addAttribute("uid", itemInfo.getUid());
+                }
             }
+        }else {
+            model.addAttribute("itemName","" );
+            model.addAttribute("uid", "");
         }
         model.addAttribute("itemList", itemInfoList);
         model.addAttribute("dataName", itemData.getDataName());

@@ -5,13 +5,17 @@ import com.wis.service.AssetsService;
 import com.wis.service.ItemService;
 import com.wis.service.SceneService;
 import com.wis.utils.ResponseCode;
+import com.wis.utils.ResultUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -53,10 +57,13 @@ public class AssetsController {
         //根据场景sid查询该场景所有设备
         List<ItemInfo> itemInfoList = itemService.getItemListBySceneId(sceneInfo.getSceneId());
 
-        for (ItemInfo itemInfo : itemInfoList) {
+        model.addAttribute("uid", "");
 
-            if (itemInfo.getAid().equals(assetsInfo.getAid())) {
-                model.addAttribute("uid", itemInfo.getUid());
+        if(itemInfoList!=null&&itemInfoList.size()>0){
+            for (ItemInfo itemInfo : itemInfoList) {
+                if (assetsInfo.getAid().equals(itemInfo.getAid())) {
+                    model.addAttribute("uid", itemInfo.getUid());
+                }
             }
         }
 
@@ -65,6 +72,14 @@ public class AssetsController {
         model.addAttribute("id", id);
 
         return "modal/assets/updateAssetsModal";
+    }
+
+    //去删除资产模态框
+    @RequestMapping("/toDeleteAssets")
+    public String toDeleteAssets(Integer id,Model model){
+
+        model.addAttribute("id",id);
+        return "modal/assets/deleteAssetsModal";
     }
 
     //更新资产信息
@@ -76,6 +91,25 @@ public class AssetsController {
 
         return new ApiResult(ResponseCode.SUCCESS, "修改成功");
 
+    }
+
+    /**
+     * 删除资产
+     * @param id 物体数据库ID
+     * @param response 响应状态码
+     * @return 提示信息
+     */
+    @RequestMapping("/deleteAssets")
+    @ResponseBody
+    public Result deleteScene(Integer id, HttpServletResponse response){
+
+        try{
+            assetsService.deleteAssets(id);
+        }catch (Exception e){
+            return ResultUtil.error(0,"服务器内部错误");
+        }
+
+        return ResultUtil.success(response.getStatus(),"删除资产成功");
     }
 
 }

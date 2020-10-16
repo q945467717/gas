@@ -1,5 +1,6 @@
 package com.wis.service.impl;
 
+import com.wis.exception.SceneNotFindException;
 import com.wis.mapper.ItemMapper;
 import com.wis.mapper.SceneMapper;
 import com.wis.pojo.po.Item;
@@ -9,10 +10,12 @@ import com.wis.pojo.vo.ItemDataInfo;
 import com.wis.pojo.vo.ItemInfo;
 import com.wis.service.ItemService;
 import com.wis.utils.ItemTypeUtil;
+import com.wis.utils.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,7 +40,9 @@ public class ItemServiceImpl implements ItemService {
             itemInfo.setId(item.getId());
             itemInfo.setItemName(item.getCname());
             Scene scene = sceneMapper.findSceneById(item.getSid());
-            itemInfo.setSceneName(scene.getSceneName());
+            if(!StringUtils.isEmpty(scene)){
+                itemInfo.setSceneName(scene.getSceneName());
+            }
             itemInfo.setItemType(ItemTypeUtil.type(item.getWtlx()));
             itemInfo.setUid(item.getUid());
             itemInfo.setText(item.getContent());
@@ -85,7 +90,9 @@ public class ItemServiceImpl implements ItemService {
             itemInfo1.setUid(item1.getUid());
             itemInfo1.setItemType(ItemTypeUtil.type(item1.getWtlx()));
             Scene scene1 = sceneMapper.findSceneById(item1.getSid());
-            itemInfo1.setSceneName(scene1.getSceneName());
+            if(!StringUtils.isEmpty(scene1)){
+                itemInfo1.setSceneName(scene1.getSceneName());
+            }
             itemInfo1.setItemName(item1.getCname());
 
             itemInfoList.add(itemInfo1);
@@ -102,6 +109,9 @@ public class ItemServiceImpl implements ItemService {
         item.setWtlx(ItemTypeUtil.nameToId(itemInfo.getItemType()));
         Scene scene = sceneMapper.findSceneByName(itemInfo.getSceneName());
 
+        if(StringUtils.isEmpty(scene)){
+            throw new SceneNotFindException(ResponseCode.SCENE_NOT_FIND);
+        }
         item.setSid(scene.getSceneId());
         item.setUid(itemInfo.getUid());
         item.setAddtime(new Date());

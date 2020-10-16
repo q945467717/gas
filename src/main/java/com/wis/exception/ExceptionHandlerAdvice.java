@@ -36,7 +36,7 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResult MethodArgumentNotValidException(MethodArgumentNotValidException e){
         log.error(e.getMessage(),e);
-        return new ApiResult(ResponseCode.VALIDATED_ERROR,null);
+        return new ApiResult(ResponseCode.VALIDATED_ERROR,e.getBindingResult().getFieldError().getDefaultMessage());
     }
 
     @ExceptionHandler(UpdateSceneException.class)

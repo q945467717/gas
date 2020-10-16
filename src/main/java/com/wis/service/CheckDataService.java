@@ -1,6 +1,7 @@
 package com.wis.service;
 
 import com.wis.dto.CheckedDataFilterDTO;
+import com.wis.dto.CheckedDateDTO;
 import com.wis.pojo.vo.CheckInfo;
 import com.wis.pojo.vo.PageHelper;
 
@@ -14,5 +15,8 @@ public interface CheckDataService {
     PageHelper<CheckInfo> getCheckedDateList(CheckedDataFilterDTO checkedDataFilterDTO);
 
     CheckInfo getCheckedDate(Integer id);
+
+    void add(CheckedDateDTO checkedDateDTO);
+
 
 }

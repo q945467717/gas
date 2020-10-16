@@ -1,5 +1,6 @@
 package com.wis.service.impl;
 
+import com.wis.dto.AssetsDTO;
 import com.wis.exception.SceneNotFindException;
 import com.wis.mapper.AssetsMapper;
 import com.wis.mapper.GasApiMapper;
@@ -12,10 +13,14 @@ import com.wis.pojo.vo.AssetsInfo;
 import com.wis.pojo.vo.PageHelper;
 import com.wis.service.AssetsService;
 import io.swagger.models.auth.In;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,9 +116,34 @@ public class AssetsServiceImpl implements AssetsService {
         }
         Item item = itemMapper.findByAidAndSid(scene.getSceneId(), assets.getAid());
 
-        itemMapper.updateAid(0,scene.getSceneId(),item.getUid());
+        if(!StringUtils.isEmpty(item)){
+            itemMapper.updateAid(0,scene.getSceneId(),item.getUid());
+        }
 
         itemMapper.updateAid(assets.getAid(),scene.getSceneId(),uid);
 
+    }
+
+    @Override
+    public void add(AssetsDTO assetsDTO) {
+        Assets assets = new Assets();
+        BeanUtils.copyProperties(assetsDTO,assets);
+        assets.setAid(assetsDTO.getAssetsAid());
+        assets.setMemberTel(assetsDTO.getAssetsMemberTel());
+
+        DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime assetsTime=LocalDateTime.parse(assetsDTO.getAssetsTime(),dtf);
+        LocalDateTime assetsMaintenance=LocalDateTime.parse(assetsDTO.getAssetsMaintenance(),dtf);
+
+        assets.setAssetsMaintenance(assetsMaintenance);
+        assets.setAssetsTime(assetsTime);
+
+        assetsMapper.insert(assets);
+
+    }
+
+    @Override
+    public void deleteAssets(int id) {
+        assetsMapper.deleteById(id);
     }
 }

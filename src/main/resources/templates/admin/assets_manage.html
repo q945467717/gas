@@ -70,7 +70,9 @@
                     align:"center",
                     field:"id",
                     formatter:function (value) {
-                        return '<a data-toggle="modal" data-target="#updateAssetsModal" class="btn btn-sm btn-success" onclick="openModal(\'/assets/toUpdateAssets\',\'updateAssetsModal\','+value+')">设置uid</a>'
+                        return '<a data-toggle="modal" data-target="#updateAssetsModal" class="btn btn-sm btn-success" onclick="openModal(\'/assets/toUpdateAssets\',\'updateAssetsModal\','+value+')">设置uid</a>'+
+                            '<a data-toggle="modal" data-target="#deleteAssetsModal" class="btn btn-sm btn-danger" onclick="openModal(\'/assets/toDeleteAssets\',\'deleteAssetsModal\',' + value + ')">删除</a>'
+
                     }
                 }
             ]
@@ -119,6 +121,8 @@
 </div>
 <!--设置uid模态框-->
 <div class="modal fade" id="updateAssetsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+<!--删除资产模态框-->
+<div class="modal fade" id="deleteAssetsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 
 <script th:replace="import/script :: script"></script>
 </body>

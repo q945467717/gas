@@ -49,6 +49,7 @@
         <result column="unit" property="unit"/>
         <result column="warning" property="warning"/>
         <result column="data_name" property="dataName"/>
+        <result column="ptime" property="ptime"/>
     </resultMap>
 
 </mapper>

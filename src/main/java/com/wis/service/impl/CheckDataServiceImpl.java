@@ -1,6 +1,7 @@
 package com.wis.service.impl;
 
 import com.wis.dto.CheckedDataFilterDTO;
+import com.wis.dto.CheckedDateDTO;
 import com.wis.mapper.AssetsMapper;
 import com.wis.mapper.CheckMapper;
 import com.wis.mapper.SceneMapper;
@@ -10,11 +11,16 @@ import com.wis.pojo.po.Scene;
 import com.wis.pojo.vo.CheckInfo;
 import com.wis.pojo.vo.PageHelper;
 import com.wis.service.CheckDataService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.SimpleFormatter;
 
 @Service
 public class CheckDataServiceImpl implements CheckDataService {
@@ -129,6 +135,27 @@ public class CheckDataServiceImpl implements CheckDataService {
         return new CheckInfo(){{
             setCheckLog(checkedData.getCheckLog());
         }};
+
+    }
+
+    @Override
+    public void add(CheckedDateDTO checkedDateDTO) {
+
+
+
+        CheckedData checkedData = new CheckedData();
+        checkedData.setCheckLog(checkedDateDTO.getCheckLog());
+        checkedData.setCheckMember(checkedDateDTO.getCheckMember());
+
+        DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDateTime=LocalDateTime.parse(checkedDateDTO.getCheckTime(),dtf);
+
+        checkedData.setCheckTime(localDateTime);
+        checkedData.setItemAid(checkedDateDTO.getCheckItemId());
+        checkedData.setSid(checkedDateDTO.getCheckItemSid());
+        checkedData.setStatus(checkedDateDTO.getStatus());
+        checkedData.setId(checkedDateDTO.getId());
+        checkMapper.insert(checkedData);
 
     }
 }

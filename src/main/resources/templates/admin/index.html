@@ -33,6 +33,12 @@
 
 <!--                </li>-->
                 <li>
+                    <a class="J_menuItem" th:href="@{/sys/peopleManage}" title="管理员管理">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">管理员管理</span>
+                    </a>
+                </li>
+                <li>
 <!--                    <a th:href="'http://'+${ip}+':8081/home'" target="_blank" title="导入场景">-->
                     <a class="J_menuItem" th:href="'http://'+${ip}+':8081/home'" title="导入场景">
 
@@ -41,12 +47,7 @@
                         <span class="nav-label">导入场景</span>
                     </a>
                 </li>
-                <li>
-                    <a class="J_menuItem" th:href="@{/sys/peopleManage}" title="管理员管理">
-                        <i class="fa fa-users"></i>
-                        <span class="nav-label">管理员管理</span>
-                    </a>
-                </li>
+
                 <li>
                     <a class="J_menuItem" th:href="@{/scene/sceneManage}" title="场景管理">
                         <i class="fa fa-users"></i>
@@ -60,15 +61,9 @@
                     </a>
                 </li>
                 <li>
-                    <a  class="J_menuItem" th:href="@{/assets/assetsManage}" title="资产管理">
+                    <a  class="J_menuItem" th:href="@{/item/importItem}" title="批量导入物体">
                         <i class="fa fa-users"></i>
-                        <span class="nav-label">资产管理</span>
-                    </a>
-                </li>
-                <li>
-                    <a  class="J_menuItem" th:href="@{/checked/checkedManage}" title="巡检记录">
-                        <i class="fa fa-users"></i>
-                        <span class="nav-label">巡检记录</span>
+                        <span class="nav-label">批量导入</span>
                     </a>
                 </li>
                 <li>
@@ -84,9 +79,15 @@
                     </a>
                 </li>
                 <li>
-                    <a  class="J_menuItem" th:href="@{/item/importItem}" title="批量导入物体">
+                    <a  class="J_menuItem" th:href="@{/assets/assetsManage}" title="资产管理">
                         <i class="fa fa-users"></i>
-                        <span class="nav-label">批量导入</span>
+                        <span class="nav-label">资产管理</span>
+                    </a>
+                </li>
+                <li>
+                    <a  class="J_menuItem" th:href="@{/checked/checkedManage}" title="巡检记录">
+                        <i class="fa fa-users"></i>
+                        <span class="nav-label">巡检记录</span>
                     </a>
                 </li>
             </ul>

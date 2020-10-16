@@ -1,5 +1,6 @@
 package com.wis.service;
 
+import com.wis.dto.AssetsDTO;
 import com.wis.pojo.po.Assets;
 import com.wis.pojo.vo.AssetsInfo;
 import com.wis.pojo.vo.PageHelper;
@@ -16,4 +17,9 @@ public interface AssetsService {
 
     //修改资产信息所属uid
     void updateAssets(Integer id,String uid);
+
+    void add(AssetsDTO assetsDTO);
+
+    void deleteAssets(int id);
+
 }

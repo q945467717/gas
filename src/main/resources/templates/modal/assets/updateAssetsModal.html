@@ -16,6 +16,7 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             <button th:id="${id}" type="button" class="btn btn-primary" onclick="updateAssets(this.id)" >确定</button>
+<!--            <button th:id="${id}" type="button" class="btn btn-primary" onclick="test()" >确定</button>-->
         </div>
     </div>
 </div>
@@ -43,6 +44,41 @@
             // contentType: 'application/json;charset=UTF-8',
             url:"/assets/"+id,
             data:{"uid":uid},
+            type:"POST",
+            dataType:"json",
+            success:function (data) {
+                if(data.code!==10000){
+                    swal({
+                        title: data.msg,
+                        type: "error"
+                    });
+                }else {
+                    swal({
+                        title: data.data,
+                        type: "success"
+                    },function(){
+                        $('#updateAssetsModal').modal('hide');
+                        $("#table").bootstrapTable('refresh', {
+                            url:"/assets/assetsInfoList"
+
+                        });
+                        //window.location.reload();
+                    });
+                }
+            }
+        })
+    }
+    function test() {
+        var data = {"checkMember":"张八",
+            "checkTime":"2020-10-10 15:21:00",
+            "checkItemId":1,
+            "status":1,
+            "checkLog":"1",
+            "checkItemSid":200};
+        $.ajax({
+            contentType: 'application/json;charset=UTF-8',
+            url:"/api/checkedDate",
+            data:JSON.stringify(data),
             type:"POST",
             dataType:"json",
             success:function (data) {

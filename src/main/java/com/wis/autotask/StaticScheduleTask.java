@@ -138,6 +138,9 @@ public class StaticScheduleTask {
 
     }
 
+    /**
+     * 打开
+     */
     //@Scheduled(cron = "0 0 0 * * ?")
     //@Scheduled(fixedRate = 30000)
     public void deleteExpireData() {
@@ -146,8 +149,11 @@ public class StaticScheduleTask {
 
     }
 
+    /**
+     * 打开
+     */
     //获取SCADA系统数据
-    @Scheduled(fixedRate = 45000)
+    //@Scheduled(fixedRate = 45000)
     public void getScadaDate() {
 
         ArrayList<Scene> sceneList = sceneMapper.findAllScene();
@@ -164,6 +170,8 @@ public class StaticScheduleTask {
                 scadaStationServicePort = scadaStationServiceService.getScadaStationServicePort();
                 stationDataBySid = scadaStationServicePort.findStationDataBySid("2", scene.getScadaSid(), "");
                 pvalues = stationDataBySid.getPvalues();
+
+                String time = stationDataBySid.getTimeCreated();
 
                 ItemData itemData1;
                 if(!StringUtils.isEmpty(pvalues)){
@@ -184,13 +192,15 @@ public class StaticScheduleTask {
                                 setPvalue(pValueDTO.getPvalue());
                                 setUpdateTime(date);
                                 setUnit(pValueDTO.getUnit());
+                                setPtime(time);
+
                             }};
                             gasApiMapper.addData(itemData1);
                         }
                     }
                 }
                 //更新整体场站信息
-                gasApiMapper.updateSceneDate(stationDataBySid.getStatName(), stationDataBySid.getStatus(), stationDataBySid.getTimeCreated(), scene.getId());
+                gasApiMapper.updateSceneDate(stationDataBySid.getStatName(), stationDataBySid.getStatus(), time, scene.getId());
             }
         }
     }

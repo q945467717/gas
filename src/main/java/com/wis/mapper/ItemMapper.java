@@ -58,6 +58,7 @@ public interface ItemMapper {
     @Select("select * from wis_item where uid = #{uid}")
     Item findByUid(String uid);
 
-
+    @Select("select * from wis_item where uid = #{uid} and sid = #{sceneId}")
+    Item findByUidAndSid(String uid,String sceneId);
 
 }

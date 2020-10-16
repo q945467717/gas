@@ -201,13 +201,18 @@ public class MainController {
 
     @ResponseBody
     @RequestMapping(value = "/downloadFile")
-    public void downloadFile(HttpServletResponse response) throws IOException {
-        InputStream f= this.getClass().getResourceAsStream("/static/file/demo.xls");
+    public void downloadFile(HttpServletResponse response,String type) throws IOException {
+        InputStream f = null;
+        if("demo".equals(type)){
+            f= this.getClass().getResourceAsStream("/static/file/demo.xls");
+        }else if("uid".equals(type)){
+            f= this.getClass().getResourceAsStream("/static/file/uid.xls");
+        }
 
         response.reset();
         response.setContentType("application/x-msdownload;charset=utf-8");
         try {
-            response.setHeader("Content-Disposition", "attachment;filename="+ new String(("demo" + ".xls").getBytes("gbk"), "iso-8859-1"));//下载文件的名称
+            response.setHeader("Content-Disposition", "attachment;filename="+ new String((type + ".xls").getBytes("gbk"), "iso-8859-1"));//下载文件的名称
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -254,9 +259,6 @@ public class MainController {
             inputStream.close();
 
             for(List<Cell> list1:list){
-
-
-
 
                 ItemInfo itemInfo = new ItemInfo();
 
