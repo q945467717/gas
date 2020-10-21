@@ -321,9 +321,11 @@ public class MainController {
 
         String request_referer = request.getHeader("Referer");
 
+        System.out.println(request_referer);
+
         if(StringUtils.isEmpty(request_referer)||StringUtils.isEmpty(momodaId)){
             return new ApiResult(ResponseCode.VALIDATED_ERROR);
-        }else if(!request_referer.equals("http://"+ip+":8081/home")){
+        }else if(!request_referer.equals("http://"+ip+":8081/")){
             return new ApiResult(ResponseCode.VALIDATED_ERROR);
         }
 
