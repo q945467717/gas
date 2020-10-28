@@ -53,11 +53,11 @@ public interface GasApiMapper {
     @Select("select * from wis_item_data where s_id=#{scadaSid}")
     List<ItemData> findDataByScadaSid(Integer scadaSid);
 
-    @Insert("insert into wis_item_data(s_id,pid,pname,ptype,pvalue,pstatus,unit,update_time) values(#{scadaSid},#{pid},#{pname},#{ptype},#{pvalue},#{pstatus},#{unit},#{updateTime})")
+    @Insert("insert into wis_item_data(s_id,pid,pname,ptype,pvalue,pstatus,unit,update_time,ptime) values(#{scadaSid},#{pid},#{pname},#{ptype},#{pvalue},#{pstatus},#{unit},#{updateTime},#{ptime})")
     void addData(ItemData itemData);
 
-    @Update("update wis_item_data set pvalue=#{pvalue},update_time = #{date} where pid=#{pid} and s_id=#{scadaSid} and ptype=#{ptype}")
-    void updateData(Integer scadaSid, String pvalue, Integer pid, String ptype,Date date);
+    @Update("update wis_item_data set pvalue=#{pvalue},update_time = #{date},ptime = #{ptime} where pid=#{pid} and s_id=#{scadaSid} and ptype=#{ptype}")
+    void updateData(Integer scadaSid, String pvalue, Integer pid, String ptype,Date date,String ptime);
 
 
     @ResultMap("ItemDataResultMap")

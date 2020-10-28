@@ -68,7 +68,10 @@ public class AssetsServiceImpl implements AssetsService {
 
             //查询资产设备所属场景
             Scene scene = sceneMapper.findBySid(assets.getAssetsSid());
-            assetsInfo.setSceneName(scene.getScadaName());
+
+            if(!StringUtils.isEmpty(scene)){
+                assetsInfo.setSceneName(scene.getScadaName());
+            }
 
             //查询该资产是否绑定场景设备
             Item item = itemMapper.findByAidAndSid(scene.getSceneId(), assets.getAid());

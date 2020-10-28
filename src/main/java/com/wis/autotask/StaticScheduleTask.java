@@ -141,7 +141,7 @@ public class StaticScheduleTask {
     /**
      * 打开
      */
-    //@Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     //@Scheduled(fixedRate = 30000)
     public void deleteExpireData() {
 
@@ -153,7 +153,7 @@ public class StaticScheduleTask {
      * 打开
      */
     //获取SCADA系统数据
-    //@Scheduled(fixedRate = 45000)
+    @Scheduled(fixedRate = 45000)
     public void getScadaDate() {
 
         ArrayList<Scene> sceneList = sceneMapper.findAllScene();
@@ -182,7 +182,7 @@ public class StaticScheduleTask {
                         //判断数据库是否有该条数据
                         ItemData itemData = gasApiMapper.findDataByScadaSidAndPid(scene.getScadaSid(), (int) pValueDTO.getPid(), pValueDTO.getPtype());
                         if (!StringUtils.isEmpty(itemData)) {         //有该条数据则更新该条数据
-                            gasApiMapper.updateData(scene.getScadaSid(), pValueDTO.getPvalue(), itemData.getPid(), pValueDTO.getPtype(),date);
+                            gasApiMapper.updateData(scene.getScadaSid(), pValueDTO.getPvalue(), itemData.getPid(), pValueDTO.getPtype(),date,time);
                         } else {                        //否则插入数据
                             itemData1 = new ItemData() {{
                                 setScadaSid(scene.getScadaSid());

@@ -197,7 +197,7 @@ public class GasApiServiceImpl implements GasApiService {
 
         try {
             Scene scene = gasApiMapper.findSceneBySceneId(sceneId);
-            return "<color=white><size=20>" + scene.getSceneName() + "</size></color>";
+            return "<color=black><size=20>" + scene.getSceneName() + "</size></color>";
 
         } catch (Exception e) {
             return "<color=red><size=20>未获取到最新数据</size></color>";
@@ -353,7 +353,7 @@ public class GasApiServiceImpl implements GasApiService {
             //判断数据库是否有该条数据
             ItemData itemData = gasApiMapper.findDataByScadaSidAndPid(scene.getScadaSid(), (int) pValueDTO.getPid(), pValueDTO.getPtype());
             if (itemData != null) {         //有该条数据则更新该条数据
-                gasApiMapper.updateData(scene.getScadaSid(), pValueDTO.getPvalue(), itemData.getPid(), pValueDTO.getPtype(), date);
+//                gasApiMapper.updateData(scene.getScadaSid(), pValueDTO.getPvalue(), itemData.getPid(), pValueDTO.getPtype(), date,time);
             } else {                        //否则插入数据
                 itemData1 = new ItemData() {{
                     setScadaSid(scene.getScadaSid());
@@ -536,6 +536,7 @@ public class GasApiServiceImpl implements GasApiService {
                     setStatus(item.getWtzt());
                     setItemName(item.getCname());
                     setUid(item.getUid());
+                    setUpdateTime(scene.getUpTime());
 
                 } else {
                     throw new SceneNotFindException("场景信息异常");
