@@ -140,7 +140,9 @@ public class SceneServiceImpl implements SceneService {
         Scene scene = sceneMapper.findBySid(sid);
 
         SceneInfo sceneInfo = new SceneInfo();
-        sceneInfo.setSceneId(scene.getSceneId());
+        if(!StringUtils.isEmpty(scene)){
+            sceneInfo.setSceneId(scene.getSceneId());
+        }
 
         return sceneInfo;
     }

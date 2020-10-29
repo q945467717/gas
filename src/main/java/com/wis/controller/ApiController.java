@@ -29,7 +29,6 @@ public class ApiController {
     @PostMapping("/checkedDate")
     public ApiResult checkedDate(@RequestBody @Validated CheckedDateDTO checkedDateDTO) {
 
-        System.out.println(checkedDateDTO);
         checkDataService.add(checkedDateDTO);
         //return ResultUtil.success(10000,"推送巡检数据成功");
         return new ApiResult(ResponseCode.SUCCESS,"推送巡检数据成功");
@@ -39,9 +38,12 @@ public class ApiController {
     @ApiOperation("资产数据推送")
     @PostMapping("/assets")
     public ApiResult assets(@RequestBody @Validated AssetsDTO assetsDTO) {
-        System.out.println(assetsDTO);
 
-        assetsService.add(assetsDTO);
+        if(assetsService.existAssets(assetsDTO)){
+            assetsService.add(assetsDTO);
+        }else {
+            return new ApiResult(ResponseCode.VALIDATED_ERROR,"资产设备已存在");
+        }
         return new ApiResult(ResponseCode.SUCCESS,"推送资产数据成功");
 
     }

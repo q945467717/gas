@@ -1,9 +1,9 @@
 package com.wis.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wis.dto.AssetsDTO;
 import com.wis.exception.SceneNotFindException;
 import com.wis.mapper.AssetsMapper;
-import com.wis.mapper.GasApiMapper;
 import com.wis.mapper.ItemMapper;
 import com.wis.mapper.SceneMapper;
 import com.wis.pojo.po.Assets;
@@ -12,7 +12,6 @@ import com.wis.pojo.po.Scene;
 import com.wis.pojo.vo.AssetsInfo;
 import com.wis.pojo.vo.PageHelper;
 import com.wis.service.AssetsService;
-import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,17 +70,15 @@ public class AssetsServiceImpl implements AssetsService {
 
             if(!StringUtils.isEmpty(scene)){
                 assetsInfo.setSceneName(scene.getScadaName());
+                //查询该资产是否绑定场景设备
+                Item item = itemMapper.findByAidAndSid(scene.getSceneId(), assets.getAid());
+
+                if(item!=null){
+                    assetsInfo.setUid(item.getUid());
+                }else {
+                    assetsInfo.setUid("未设置");
+                }
             }
-
-            //查询该资产是否绑定场景设备
-            Item item = itemMapper.findByAidAndSid(scene.getSceneId(), assets.getAid());
-
-            if(item!=null){
-                assetsInfo.setUid(item.getUid());
-            }else {
-                assetsInfo.setUid("未设置");
-            }
-
             assetsInfoList.add(assetsInfo);
 
         }
@@ -148,5 +145,15 @@ public class AssetsServiceImpl implements AssetsService {
     @Override
     public void deleteAssets(int id) {
         assetsMapper.deleteById(id);
+    }
+
+    @Override
+    public boolean existAssets(AssetsDTO assetsDTO) {
+
+        QueryWrapper<Assets> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("assets_aid",assetsDTO.getAssetsAid());
+        queryWrapper.eq("assets_sid",assetsDTO.getAssetsSid());
+        Assets assets = assetsMapper.selectOne(queryWrapper);
+        return StringUtils.isEmpty(assets);
     }
 }

@@ -21,6 +21,7 @@ public enum  ResponseCode implements BaseErrorInfoInterface {
     GROUP_NOT_FIND(50022,"分组不存在"),
     ITEM_NOT_FIND(50031,"物体不存在"),
     ITEM_REPEAT(50032,"物体已存在"),
+    ASSETS_REPEAT(50032,"物体已存在"),
 
 
     ;

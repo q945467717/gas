@@ -16,6 +16,7 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             <button type="button" class="btn btn-primary" onclick="addGroup()" >确定</button>
+<!--            <button type="button" class="btn btn-primary" onclick="test()" >确定</button>-->
         </div>
     </div>
 </div>
@@ -67,4 +68,52 @@
         })
 
     }
+    function test() {
+        var data = {"checkMember":"张八",
+            "checkTime":"2020-10-10 15:21:00",
+            "checkItemId":1,
+            "status":1,
+            "checkLog":"1",
+            "checkItemSid":200};
+        var data1 = {
+            "assetsName":"孔板流量计",
+            "assetsTime":"2020-10-10 15:20:00",
+            "assetsAid":20,
+            "assetsSid":20,
+            "assetsDepartment":"信息部",
+            "assetsMember":"王五",
+            "assetsMemberTel":"15021750419",
+            "assetsMaintenance":"2020-10-10 15:20:00",
+            "sinceNumber":"123"
+        }
+
+        $.ajax({
+            contentType: 'application/json;charset=UTF-8',
+            url:"/api/assets",
+            data:JSON.stringify(data1),
+            type:"POST",
+            dataType:"json",
+            success:function (data) {
+                if(data.code!==10000){
+                    swal({
+                        title: data.msg,
+                        type: "error"
+                    });
+                }else {
+                    swal({
+                        title: data.data,
+                        type: "success"
+                    },function(){
+                        $('#updateAssetsModal').modal('hide');
+                        $("#table").bootstrapTable('refresh', {
+                            url:"/assets/assetsInfoList"
+
+                        });
+                        //window.location.reload();
+                    });
+                }
+            }
+        })
+    }
+
 </script>

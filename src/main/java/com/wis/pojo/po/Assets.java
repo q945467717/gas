@@ -27,5 +27,6 @@ public class Assets {
     private String memberTel;
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     private LocalDateTime assetsMaintenance;//维保时间
+    private String sinceNumber;
 
 }
