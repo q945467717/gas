@@ -152,7 +152,7 @@ public class ItemController {
             return ResultUtil.error(0,"服务器内部错误");
         }
 
-        return ResultUtil.success(response.getStatus(),"删除物体成功");
+        return ResultUtil.success(response.getStatus(),"删除成功");
     }
 
 
@@ -172,7 +172,7 @@ public class ItemController {
             return ResultUtil.error(0,"服务器内部错误");
         }
 
-        return ResultUtil.success(response.getStatus(),"修改物体成功");
+        return ResultUtil.success(response.getStatus(),"修改成功");
     }
 
 
