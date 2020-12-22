@@ -434,15 +434,32 @@ public class GasApplicationTests {
     static SynchronizedScene1 ss2 = new SynchronizedScene1();
 
     @Test
-    public void test111() throws InterruptedException {
+    public void test111() {
 
-            Thread t1 = new Thread(ss1);
-            Thread t2 = new Thread(ss2);
-            t1.start();
-            t2.start();
-            t1.join();
-            t2.join();
-            System.out.println("run over");
+        //ArtemisConfig.host = "127.0.0.1:80"; // artemis网关服务器ip端口
+        //ArtemisConfig.appKey = "26973269";  // 秘钥appkey
+        //ArtemisConfig.appSecret = "L9ImaMNOmzAhIj7xZzx0";// 秘钥appSecret
+        final String ARTEMIS_PATH = "";
+        final String previewURLsApi = ARTEMIS_PATH + "/api/resource/v1/cameras";
+        Map<String, String> path = new HashMap<String, String>(2) {
+            {
+                put("http://", previewURLsApi);//根据现场环境部署确认是http还是https
+            }
+        };
+
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put("pageNo", 1);
+        jsonBody.put("pageSize", 20);
+
+        String body = jsonBody.toJSONString();
+
+        String contentType = "application/json";
+
+
+        //String result = ArtemisHttpUtil.doPostStringArtemis(path, body, null, null, contentType , null);// post请求application/json类型参数
+
+
+        //System.out.println(result);
 
     }
 

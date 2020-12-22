@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=565f4428b3187dfafb7274ddcfa50eb8"></script>
+    <script src="/static/js/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div id="map"></div>
+</div>
+
+</body>
+</html>
+<script>
+    var data = [
+        {
+            name:"二储",
+            lat:30.639096,
+            lng:104.13261,
+            id:13
+        },{
+            name:"九眼桥",
+            lat:30.637786,
+            lng:104.085637,
+            id:3
+        },{
+            name:"西金",
+            lat: 30.733821,
+            lng: 104.045174,
+            id:9
+        },{
+            name:"市一门站",
+            lat: 30.639403,
+            lng: 104.131097,
+            id:12
+        },{
+            name:"唐家寺",
+            lat: 30.883586,
+            lng: 104.213469,
+            id:11
+        },{
+            name:"德阳",
+            lat: 31.244108,
+            lng: 104.352861,
+            id:5
+        },{
+            name:"彭县",
+            lat: 30.99674,
+            lng: 103.94962,
+            id:10
+        },{
+            name:"三储",
+            lat:30.690915,
+            lng:104.025756,
+            id:14
+        },{
+            name:"大丰",
+            lat:30.777518,
+            lng: 104.053385,
+            id:4
+        },{
+            name:"十陵门站",
+            lat: 30.647866,
+            lng: 104.175623,
+            id:7
+        },{
+            name:"一储",
+            lat: 30.642556,
+            lng: 104.138432,
+            id:6
+        },{
+            name:"赖家坡",
+            lat: 30.637451,
+            lng: 104.15489,
+            id:2
+        },{
+            name:"西区门站",
+            lat: 30.772073,
+            lng: 103.892765,
+            id:1
+        },{
+            name:"三河场",
+            lat: 30.773857,
+            lng: 104.137364,
+            id:8
+        },
+    ];
+
+    $(function () {
+        var map = new AMap.Map('map',{
+            mapStyle: 'amap://styles/0590cbae7ab8262c20ad8aa83b9fbc18', //设置地图的显示样式
+            center: [104.07,30.66],//中心点坐标
+            zoom:14,//级别
+        });
+
+        data.forEach(position=>{
+            // var circle = new AMap.Circle({
+            //     center: [position.lng,position.lat], // 圆心位置
+            //     radius: 100,  //半径
+            //     strokeColor: "#F33",  //线颜色
+            //     strokeOpacity: 1,  //线透明度
+            //     strokeWeight: 3,  //线粗细度
+            //     fillColor: "#ee2200",  //填充颜色
+            //     fillOpacity: 0.35 //填充透明度
+            // });
+            var marker = new AMap.Marker({
+                position:[position.lng,position.lat],
+            });
+
+
+            marker.setTitle(position.name);
+
+            marker.setLabel({
+                offset: new AMap.Pixel(-20,-30),  //设置文本标注偏移量
+                content: position.name, //设置文本标注内容
+                direction: 'right' //设置文本标注方位
+            });
+            marker.setExtData({"id":position.id})
+
+            marker.on('click',function () {
+                console.log(this.getExtData().id)
+                window.location.href="/member/detail?id="+this.getExtData().id
+            })
+
+            map.add(marker)
+        })
+    })
+
+</script>
+<style>
+
+    * {padding: 0;}
+
+    .container {position:absolute;top:0;left:0;width:100%; height: 100%; }
+
+    #map{height: 100%}
+
+</style>
+

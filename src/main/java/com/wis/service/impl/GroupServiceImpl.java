@@ -1,6 +1,5 @@
 package com.wis.service.impl;
 
-import com.wis.exception.SceneNotFindException;
 import com.wis.mapper.GroupMapper;
 import com.wis.mapper.SceneMapper;
 import com.wis.pojo.po.Group;
@@ -13,7 +12,6 @@ import com.wis.service.GroupService;
 import com.wis.utils.ItemTypeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;

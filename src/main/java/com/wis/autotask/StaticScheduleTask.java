@@ -141,7 +141,7 @@ public class StaticScheduleTask {
     /**
      * 打开
      */
-    @Scheduled(cron = "0 0 0 * * ?")
+    //@Scheduled(cron = "0 0 0 * * ?")
     //@Scheduled(fixedRate = 30000)
     public void deleteExpireData() {
 
@@ -153,7 +153,7 @@ public class StaticScheduleTask {
      * 打开
      */
     //获取SCADA系统数据
-    @Scheduled(fixedRate = 45000)
+    //@Scheduled(fixedRate = 45000)
     public void getScadaDate() {
 
         ArrayList<Scene> sceneList = sceneMapper.findAllScene();
