@@ -305,9 +305,12 @@ public class MainController {
 
         System.out.println(request_referer);
 
-        if(StringUtils.isEmpty(request_referer)||StringUtils.isEmpty(momodaId)){
-            return new ApiResult(ResponseCode.VALIDATED_ERROR);
-        }else if(!request_referer.equals("http://"+ip+":8081/")){
+//        if(StringUtils.isEmpty(request_referer)||StringUtils.isEmpty(momodaId)){
+//            return new ApiResult(ResponseCode.VALIDATED_ERROR);
+//        }else if(!request_referer.equals("http://"+ip+":8081/")){
+//            return new ApiResult(ResponseCode.VALIDATED_ERROR);
+//        }
+        if(StringUtils.isEmpty(momodaId)){
             return new ApiResult(ResponseCode.VALIDATED_ERROR);
         }
 

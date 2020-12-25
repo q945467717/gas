@@ -46,6 +46,7 @@ public class DataSourceServiceImpl implements DataSourceService {
                 setPid(itemData.getPid());
                 setPname(itemData.getPname());
                 setId(itemData.getId());
+                setSid(itemData.getScadaSid());
                 setStationName(scene.getSceneName());
                 setUpdateTime(itemData.getUpdateTime());
             }};
